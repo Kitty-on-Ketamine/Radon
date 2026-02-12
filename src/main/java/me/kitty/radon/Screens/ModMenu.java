@@ -18,6 +18,8 @@ public class ModMenu extends Screen {
 
         super(Text.literal(title));
 
+        this.title = title;
+
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ModMenu extends Screen {
 
         super.render(context, mouseX, mouseY, partialTicks);
 
-        context.drawCenteredTextWithShadow(textRenderer, this.title, width / 2, height - 10, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, this.title, width / 2, 10, 0xFFFFFFFF);
 
     }
 
