@@ -1,12 +1,11 @@
 package me.kitty.radon.Widgets;
 
-import me.kitty.radon.Radon;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.4 {
 import net.minecraft.client.gl.RenderPipelines;
 //? } else {
 /*import net.minecraft.client.render.RenderLayer;
-*///? }
+ *///? }
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -17,25 +16,25 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class Button extends ClickableWidget {
+public class Input extends ClickableWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
-    private static final Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/button");
-    private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/button_highlighted");
-    private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/button_disabled");
+    private static final Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/input");
+    private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
+    private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
 
     private final Runnable onPress;
     private final SoundEvent clickSound;
-    private final String text;
+    private final String placeholder;
 
-    public Button(int x, int y, int width, int height, String text, Runnable onPress, SoundEvent clickSound) {
+    public Input(int x, int y, int width, int height, String placeholder, Runnable onPress, SoundEvent clickSound) {
 
-        super(x, y, width, height, Text.of(text));
+        super(x, y, width, height, Text.of(placeholder));
 
         this.onPress = onPress;
         this.clickSound = clickSound;
-        this.text = text;
+        this.placeholder = placeholder;
 
     }
 
@@ -52,10 +51,10 @@ public class Button extends ClickableWidget {
 
         }
         else if (this.isHovered()) {
-            
+
             texture = TEXTURE_HOVER;
             textColor = 0xFFa1a1a1;
-            
+
         }
         else {
 
@@ -68,27 +67,13 @@ public class Button extends ClickableWidget {
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
-        *///? }
-        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+         *///? }
+        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.placeholder), getX() + width / 2, getY() + (height - 8) / 2, textColor);
 
     }
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {
-
-    }
-
-    @Override
-    public void playDownSound(SoundManager soundManager) {
-
-        soundManager.play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
-
-    }
-
-    @Override
-    public void onClick(Click click, boolean doubled) {
-
-        onPress.run();
 
     }
 

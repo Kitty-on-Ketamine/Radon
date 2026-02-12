@@ -2,8 +2,8 @@
   "sources": [
     {
       "type": "directory",
-      "source": "",
-      "prefix": ""
+      "source": "widgets",
+      "prefix": "widgets/"
     }
   ]
 }

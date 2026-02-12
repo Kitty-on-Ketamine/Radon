@@ -1,6 +1,6 @@
 package me.kitty.radon.client;
 
-import me.kitty.radon.Screens.CicaScreen;
+import me.kitty.radon.Screens.ModMenu;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -27,7 +27,7 @@ public class RadonClient implements ClientModInitializer {
 
             while (OPEN_MENU.wasPressed()) {
 
-                MinecraftClient.getInstance().setScreen(new CicaScreen("Teszt"));
+                MinecraftClient.getInstance().setScreen(new ModMenu("Radon Menu"));
 
             }
 

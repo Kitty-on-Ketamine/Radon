@@ -3,5 +3,10 @@
     "sounds": [
       "radon:click"
     ]
+  },
+  "menu_slide": {
+    "sounds": [
+      "radon:slide"
+    ]
   }
 }
