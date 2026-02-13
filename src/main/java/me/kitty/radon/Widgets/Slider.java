@@ -6,7 +6,8 @@ import net.minecraft.client.MinecraftClient;
 //? if >1.21.4 {
 import net.minecraft.client.gl.RenderPipelines;
 //? } else {
-/*import net.minecraft.client.render.RenderLayer;
+/*import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.render.RenderLayer;
  *///? }
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
@@ -34,10 +35,10 @@ public class Slider extends SliderWidget {
     private final Consumer<Slider> onPress;
     private final SoundEvent clickSound;
     private final SoundEvent slideSound;
-    public Text text;
-    public int textColor;
+    private Text text;
+    private int textColor;
     private long now;
-    public DrawContext drawContext;
+    private DrawContext drawContext;
 
     public Slider(int x, int y, int width, int height, String text, Consumer<Slider> onPress, SoundEvent slideSound, SoundEvent clickSound, double initialValue) {
 
@@ -72,17 +73,17 @@ public class Slider extends SliderWidget {
 
         }
 
-        //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
-
         int handleWidth = 9;
         int handleX = getX() + (int)(this.value * (width - handleWidth));
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
 
         context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
+        //?if >1.21.4 {
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
+        context.drawGuiTexture(RenderLayer::getGuiTextured, handleTexture, handleX, getY(), handleWidth, height);
          *///? }
 
     }
@@ -124,6 +125,11 @@ public class Slider extends SliderWidget {
 
         return this.value;
 
+    }
+
+    public void updateText(String newText) {
+        text = Text.literal(newText).setStyle(Radon.fontStyle);
+        drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
     }
 
 }

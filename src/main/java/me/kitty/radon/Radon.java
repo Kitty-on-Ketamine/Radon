@@ -15,8 +15,8 @@ public class Radon implements ModInitializer {
     //? if > 1.21.8 {
     public static Style fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of("radon", "default")));
     //? } else {
-    /*public static Style fontStyle = Style.EMPTY.withFont(Identifier.of("radon", "default"));*/
-    //? }
+    /*public static Style fontStyle = Style.EMPTY.withFont(Identifier.of("radon", "default"));
+    *///? }
 
     @Override
     public void onInitialize() {
