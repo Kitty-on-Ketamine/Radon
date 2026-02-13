@@ -1,5 +1,6 @@
 package me.kitty.radon.Widgets;
 
+import me.kitty.radon.Radon;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.4 {
 import net.minecraft.client.gl.RenderPipelines;
@@ -8,15 +9,17 @@ import net.minecraft.client.gl.RenderPipelines;
  *///? }
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class Input extends ClickableWidget {
+import java.util.function.Consumer;
+
+import static me.kitty.radon.Radon.fontStyle;
+
+public class Input extends TextFieldWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -24,56 +27,76 @@ public class Input extends ClickableWidget {
     private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
     private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
 
-    private final Runnable onPress;
+    private final Consumer<Input> onPress;
     private final SoundEvent clickSound;
-    private final String placeholder;
+    private final SoundEvent slideSound;
+    private final Text placeholder;
 
-    public Input(int x, int y, int width, int height, String placeholder, Runnable onPress, SoundEvent clickSound) {
+    public Input(int x, int y, int width, int limit, String placeholder, Consumer<Input> onPress, SoundEvent clickSound, SoundEvent slideSound) {
 
-        super(x, y, width, height, Text.of(placeholder));
+        super(mc.textRenderer, x + 4, y + 4, width - 10, 16, Text.empty());
+
+        this.setPlaceholder(Text.literal(placeholder).withColor(0xFF656565));
+        this.setDrawsBackground(false);
+        this.setMaxLength(limit);
+        this.setEditableColor(0xFF656565);
 
         this.onPress = onPress;
         this.clickSound = clickSound;
-        this.placeholder = placeholder;
+        this.slideSound = slideSound;
+        this.placeholder = Text.literal(placeholder).setStyle(fontStyle);
 
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 
         Identifier texture;
-        int textColor;
 
-        if (!this.active) {
-
-            texture = TEXTURE_DISABLED;
-            textColor = 0xFF404040;
-
-        }
+        if (!this.active) texture = TEXTURE_DISABLED;
         else if (this.isHovered()) {
 
             texture = TEXTURE_HOVER;
-            textColor = 0xFFa1a1a1;
+            this.setEditableColor(0xFFa1a1a1);
 
         }
         else {
 
             texture = TEXTURE_NORMAL;
-            textColor = 0xFF606060;
+            this.setEditableColor(0xFF656565);
 
         }
 
         //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX() - 4, getY() - 4, width + 10, height);
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
          *///? }
-        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.placeholder), getX() + width / 2, getY() + (height - 8) / 2, textColor);
+
+        super.renderWidget(context, mouseX, mouseY, deltaTicks);
 
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    public void onClick(Click click, boolean doubled) {
+
+        mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
+
+    }
+
+    @Override
+    public void onRelease(Click click) {
+
+        mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 0.8f, 5.0f * Radon.volume));
+
+    }
+
+    @Override
+    public void write(String text) {
+
+        mc.getSoundManager().play(PositionedSoundInstance.ui(slideSound, 1.0f, 5.0f * Radon.volume));
+
+        super.write(text);
 
     }
 

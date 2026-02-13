@@ -32,9 +32,9 @@ public class ModMenu extends Screen {
                 10,
                 10,
                 50,
-                15,
+                16,
                 "Back",
-                () -> {
+                (button) -> {
 
                     mc.setScreen(null);
 
@@ -46,9 +46,9 @@ public class ModMenu extends Screen {
                 this.width - 20 - mc.textRenderer.getWidth("Settings"),
                 10,
                 50,
-                15,
+                16,
                 "Settings",
-                () -> mc.execute(() -> mc.setScreen(new SettingsScreen("Settings"))),
+                (button) -> mc.execute(() -> mc.setScreen(new SettingsScreen("Settings"))),
                 MENU_CLICK
         );
 

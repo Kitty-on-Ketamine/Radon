@@ -14,8 +14,14 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Style;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Consumer;
+
+import static me.kitty.radon.Radon.scaleMultiplier;
 
 public class Button extends ClickableWidget {
 
@@ -25,17 +31,17 @@ public class Button extends ClickableWidget {
     private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/button_highlighted");
     private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/button_disabled");
 
-    private final Runnable onPress;
+    private final Consumer<Button> onPress;
     private final SoundEvent clickSound;
-    private final String text;
+    private Text text;
 
-    public Button(int x, int y, int width, int height, String text, Runnable onPress, SoundEvent clickSound) {
+    public Button(int x, int y, int width, int height, String text, Consumer<Button> onPress, SoundEvent clickSound) {
 
         super(x, y, width, height, Text.of(text));
 
         this.onPress = onPress;
         this.clickSound = clickSound;
-        this.text = text;
+        this.text = Text.literal(text).setStyle(Radon.fontStyle);
 
     }
 
@@ -50,14 +56,12 @@ public class Button extends ClickableWidget {
             texture = TEXTURE_DISABLED;
             textColor = 0xFF404040;
 
-        }
-        else if (this.isHovered()) {
+        } else if (this.isHovered()) {
             
             texture = TEXTURE_HOVER;
             textColor = 0xFFa1a1a1;
             
-        }
-        else {
+        } else {
 
             texture = TEXTURE_NORMAL;
             textColor = 0xFF606060;
@@ -69,7 +73,7 @@ public class Button extends ClickableWidget {
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
         *///? }
-        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
     }
 
@@ -88,7 +92,7 @@ public class Button extends ClickableWidget {
     @Override
     public void onClick(Click click, boolean doubled) {
 
-        onPress.run();
+        onPress.accept(this);
 
     }
 

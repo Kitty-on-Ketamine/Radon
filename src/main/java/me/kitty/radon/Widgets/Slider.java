@@ -15,6 +15,8 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Style;
+import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -32,7 +34,7 @@ public class Slider extends SliderWidget {
     private final Consumer<Slider> onPress;
     private final SoundEvent clickSound;
     private final SoundEvent slideSound;
-    public String text;
+    public Text text;
     public int textColor;
     private long now;
     public DrawContext drawContext;
@@ -44,7 +46,7 @@ public class Slider extends SliderWidget {
         this.onPress = onPress;
         this.clickSound = clickSound;
         this.slideSound = slideSound;
-        this.text = text;
+        this.text = Text.literal(text).setStyle(Radon.fontStyle);
         this.now = System.currentTimeMillis();
 
     }
@@ -62,8 +64,7 @@ public class Slider extends SliderWidget {
             handleTexture = TEXTURE_HANDLE_HOVER;
             textColor = 0xFFa1a1a1;
 
-        }
-        else {
+        } else {
 
             texture = TEXTURE_NORMAL;
             handleTexture = TEXTURE_HANDLE;
@@ -74,11 +75,11 @@ public class Slider extends SliderWidget {
         //?if >1.21.4 {
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
 
-        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - 8) / 2, textColor);
-
         int handleWidth = 9;
         int handleX = getX() + (int)(this.value * (width - handleWidth));
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
+
+        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
@@ -94,7 +95,7 @@ public class Slider extends SliderWidget {
     @Override
     protected void applyValue() {
 
-        if (System.currentTimeMillis() - this.now > 50) {
+        if (System.currentTimeMillis() - this.now > 45) {
 
             mc.getSoundManager().play(PositionedSoundInstance.ui(slideSound, 1.0f, 5.0f * Radon.volume));
             this.now = System.currentTimeMillis();
@@ -106,9 +107,16 @@ public class Slider extends SliderWidget {
     }
 
     @Override
-    public void onRelease(Click click) {
+    public void onClick(Click click, boolean doubled) {
 
         mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
+
+    }
+
+    @Override
+    public void onRelease(Click click) {
+
+        mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 0.8f, 5.0f * Radon.volume));
 
     }
 
