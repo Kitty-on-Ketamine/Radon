@@ -74,8 +74,16 @@ public class Box implements Drawable, Element, Selectable {
             // TOP
             context.fill(
                     x1 - 4,
-                    y1 - 4,
+                    y1 - 3,
                     x2 + 4,
+                    y1 - 2,
+                    outline
+            );
+
+            context.fill(
+                    x1 - 3,
+                    y1 - 4,
+                    x2 + 3,
                     y1 - 2,
                     outline
             );
@@ -83,8 +91,16 @@ public class Box implements Drawable, Element, Selectable {
             // BOTTOM
             context.fill(
                     x1 - 4,
-                    y2 + 4,
+                    y2 + 3,
                     x2 + 4,
+                    y2 + 2,
+                    outline
+            );
+
+            context.fill(
+                    x1 - 3,
+                    y2 + 4,
+                    x2 + 3,
                     y2 + 2,
                     outline
             );
@@ -92,16 +108,16 @@ public class Box implements Drawable, Element, Selectable {
             // LEFT
             context.fill(
                     x1 - 4,
-                    y1 - 4,
+                    y1 - 2,
                     x1 - 2,
-                    y2 + 4,
+                    y2 + 2,
                     outline
             );
 
             // RIGHT
             context.fill(
                     x2 + 4,
-                    y1 - 4,
+                    y1 - 2,
                     x2 + 2,
                     y2 + 2,
                     outline
@@ -138,7 +154,7 @@ public class Box implements Drawable, Element, Selectable {
 
     @Override
     public SelectionType getType() {
-        return null;
+        return SelectionType.NONE;
     }
 
     @Override

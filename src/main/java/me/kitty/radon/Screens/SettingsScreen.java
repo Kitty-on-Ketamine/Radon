@@ -60,9 +60,7 @@ public class SettingsScreen extends Screen {
                 (slider) -> {
 
                     Radon.volume = (float) slider.getValue();
-                    slider.text = Text.literal("Volume: " + Math.round(Radon.volume * 100) + "%").setStyle(Radon.fontStyle);
-
-                    slider.drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(slider.text), slider.getX() + width / 2, slider.getY() + (height - 8) / 2, slider.textColor);
+                    slider.updateText("Volume: " + Math.round(Radon.volume * 100) + "%");
 
                 },
                 MENU_SLIDE,

@@ -29,10 +29,10 @@ public class Slider extends SliderWidget {
     private final Consumer<Slider> onPress;
     private final SoundEvent clickSound;
     private final SoundEvent slideSound;
-    public Text text;
-    public int textColor;
+    private Text text;
+    private int textColor;
     private long now;
-    public DrawContext drawContext;
+    private DrawContext drawContext;
     private Boolean hidden;
 
     public Slider(int x, int y, int width, int height, String text, Consumer<Slider> onPress, SoundEvent slideSound, SoundEvent clickSound, double initialValue) {
@@ -111,6 +111,13 @@ public class Slider extends SliderWidget {
     public void onClick(Click click, boolean doubled) {
 
         mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
+
+    }
+
+    public void updateText(String text) {
+        this.text = Text.literal(text).setStyle(Radon.fontStyle);
+
+        drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(text), getX() + width / 2, getY() + (height - 8) / 2, textColor);
 
     }
 

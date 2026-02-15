@@ -104,13 +104,12 @@ public class StaticBox implements Drawable, Element, Selectable {
     }
 
     @Override
-    public SelectionType getType() {
-        return null;
-    }
-
-    @Override
     public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
 
+    @Override
+    public SelectionType getType() {
+        return SelectionType.NONE;
+    }
 }
