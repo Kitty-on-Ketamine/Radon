@@ -86,6 +86,8 @@ public class WidgetDrawer {
 
         heightOffset.put(screen, heightOffset.get(screen) + 20);
 
+        renderCollections(screen, screenEntries.get(screen));
+
     }
 
     public static void end(Screen screen) {
@@ -114,7 +116,7 @@ public class WidgetDrawer {
 
             int y = heightOffset.get(screen);
 
-            if (y + 16 < 60 || y > screen.height - 60) {
+            if (y < 75 || y > screen.height - 60) {
 
                 collection.box.visible = false;
                 collection.label.visible = false;

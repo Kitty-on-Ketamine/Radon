@@ -8,7 +8,9 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.text.Text;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Box implements Drawable, Element, Selectable {
@@ -25,8 +27,10 @@ public class Box implements Drawable, Element, Selectable {
     private final List<Text> tooltip;
     private Boolean hidden;
     public boolean visible;
+    public HashMap<Box, Long> now = new HashMap<>();
 
     private boolean on = false;
+    private int fade = 0;
 
     public Box(int x1, int y1, int x2, int y2, int color, int outline, List<String> tooltip) {
 
@@ -46,6 +50,8 @@ public class Box implements Drawable, Element, Selectable {
 
         this.tooltip = tooltipList;
 
+        this.now.put(this, System.currentTimeMillis());
+
     }
 
     @Override
@@ -53,6 +59,20 @@ public class Box implements Drawable, Element, Selectable {
 
         if (this.hidden) return;
         if (!this.visible) return;
+
+        if (on && System.currentTimeMillis() - now.get(this) >= 5) {
+
+            fade = Math.min(fade + 1, 25);
+            now.put(this, System.currentTimeMillis());
+
+        }
+
+        if (!on && System.currentTimeMillis() - now.get(this) >= 5) {
+
+            fade = Math.max(fade - 1, 0);
+            now.put(this, System.currentTimeMillis());
+
+        }
 
         if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
 
@@ -71,42 +91,6 @@ public class Box implements Drawable, Element, Selectable {
                     color
             );
 
-            // TOP
-            context.fill(
-                    x1 - 4,
-                    y1 - 4,
-                    x2 + 4,
-                    y1 - 2,
-                    outline
-            );
-
-            // BOTTOM
-            context.fill(
-                    x1 - 4,
-                    y2 + 4,
-                    x2 + 4,
-                    y2 + 2,
-                    outline
-            );
-
-            // LEFT
-            context.fill(
-                    x1 - 4,
-                    y1 - 4,
-                    x1 - 2,
-                    y2 + 4,
-                    outline
-            );
-
-            // RIGHT
-            context.fill(
-                    x2 + 4,
-                    y1 - 4,
-                    x2 + 2,
-                    y2 + 2,
-                    outline
-            );
-
             if (tooltip != null && !tooltip.isEmpty()) {
 
                 context.drawTooltip(
@@ -123,6 +107,78 @@ public class Box implements Drawable, Element, Selectable {
             on = false;
 
         }
+
+        int alpha = Math.min(fade * 10, 255);
+
+        int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
+
+        // TOP
+        context.fill(
+                x1 - 3,
+                y1 - 3,
+                x2 + 3,
+                y1 - 2,
+                outlineColor
+        );
+
+        context.fill(
+                x1 - 2,
+                y1 - 4,
+                x2 + 2,
+                y1 - 3,
+                outlineColor
+        );
+
+        // BOTTOM
+        context.fill(
+                x1 - 3,
+                y2 + 3,
+                x2 + 3,
+                y2 + 2,
+                outlineColor
+        );
+
+        context.fill(
+                x1 - 2,
+                y2 + 4,
+                x2 + 2,
+                y2 + 3,
+                outlineColor
+        );
+
+        // LEFT
+        context.fill(
+                x1 - 3,
+                y1 - 2,
+                x1 - 2,
+                y2 + 2,
+                outlineColor
+        );
+
+        context.fill(
+                x1 - 4,
+                y1 - 2,
+                x1 - 3,
+                y2 + 2,
+                outlineColor
+        );
+
+        // RIGHT
+        context.fill(
+                x2 + 3,
+                y1 - 2,
+                x2 + 2,
+                y2 + 2,
+                outlineColor
+        );
+
+        context.fill(
+                x2 + 4,
+                y1 - 2,
+                x2 + 3,
+                y2 + 2,
+                outlineColor
+        );
 
     }
 
