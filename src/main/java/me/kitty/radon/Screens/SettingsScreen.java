@@ -5,6 +5,7 @@ import me.kitty.radon.Utils.DataUtils;
 import me.kitty.radon.Widgets.Button;
 import me.kitty.radon.Widgets.Input;
 import me.kitty.radon.Widgets.Slider;
+import me.kitty.radon.Widgets.StaticBox;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +14,8 @@ import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.joml.Matrix3x2f;
+
+import java.util.List;
 
 import static me.kitty.radon.Radon.scaleMultiplier;
 import static me.kitty.radon.client.Sound.*;
@@ -34,8 +37,7 @@ public class SettingsScreen extends Screen {
     @Override
     protected void init() {
 
-        int centerX = this.width / 2;
-        int centerY = this.height / 2;
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
 
         Button backButton = new Button(
                 10,
@@ -43,7 +45,9 @@ public class SettingsScreen extends Screen {
                 50,
                 16,
                 "Back",
-                (button) -> mc.execute(() -> mc.setScreen(new ModMenu("Radon Menu"))),
+                List.of(),
+                0,
+                (button) -> mc.execute(() -> mc.setScreen(new ModMenu())),
                 MENU_CLICK
         );
 
@@ -56,7 +60,9 @@ public class SettingsScreen extends Screen {
                 (slider) -> {
 
                     Radon.volume = (float) slider.getValue();
-                    slider.updateText("Volume: " + Math.round(Radon.volume * 100) + "%");
+                    slider.text = Text.literal("Volume: " + Math.round(Radon.volume * 100) + "%").setStyle(Radon.fontStyle);
+
+                    slider.drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(slider.text), slider.getX() + width / 2, slider.getY() + (height - 8) / 2, slider.textColor);
 
                 },
                 MENU_SLIDE,
@@ -87,6 +93,7 @@ public class SettingsScreen extends Screen {
                 Radon.inputText,
                 (input) -> {Radon.inputText = input.getText();},
                 MENU_CLICK,
+                MENU_CLICK,
                 MENU_SLIDE
         );
 
@@ -102,7 +109,7 @@ public class SettingsScreen extends Screen {
 
         super.render(context, mouseX, mouseY, partialTicks);
 
-        context.drawCenteredTextWithShadow(textRenderer, this.title, width / 2, 10, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, Text.literal(this.title).setStyle(Radon.fontStyle), width / 2, 15, 0xFFFFFFFF);
 
     }
 

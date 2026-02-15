@@ -10,18 +10,17 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.UnknownNullability;
 
+import java.util.List;
 import java.util.function.Consumer;
-
-import static me.kitty.radon.Radon.scaleMultiplier;
 
 public class Button extends ClickableWidget {
 
@@ -33,20 +32,45 @@ public class Button extends ClickableWidget {
 
     private final Consumer<Button> onPress;
     private final SoundEvent clickSound;
-    private Text text;
+    private final int color;
+    public Text text;
+    public Boolean hidden;
 
-    public Button(int x, int y, int width, int height, String text, Consumer<Button> onPress, SoundEvent clickSound) {
+    public int x;
+    public int y;
+
+    public Button(int x, int y, int width, int height, String text, @UnknownNullability List<String> description, int color, Consumer<Button> onPress, SoundEvent clickSound) {
 
         super(x, y, width, height, Text.of(text));
 
         this.onPress = onPress;
         this.clickSound = clickSound;
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
+        this.color = color;
+
+        this.x = x;
+        this.y = y;
+
+        this.hidden = false;
+
+        String tooltip = "";
+
+        for (String line : description) {
+
+            boolean check = description.indexOf(line) >= description.size();
+
+            tooltip = tooltip + line + (check ? "" : "\n");
+
+        }
+
+        if (!description.isEmpty()) this.setTooltip(Tooltip.of(Text.literal(tooltip).setStyle(Radon.fontStyle)));
 
     }
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+
+        if (this.hidden) return;
 
         Identifier texture;
         int textColor;
@@ -68,12 +92,18 @@ public class Button extends ClickableWidget {
 
         }
 
+        if (this.color != 0) {
+
+            textColor = this.color;
+
+        }
+
         //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, this.x, this.y, width, height);
         //? } else {
-        /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
+        /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, this.x, this.y, width, height);
         *///? }
-        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
     }
 
@@ -93,6 +123,12 @@ public class Button extends ClickableWidget {
     public void onClick(Click click, boolean doubled) {
 
         onPress.accept(this);
+
+    }
+
+    public void hide() {
+
+        hidden = true;
 
     }
 

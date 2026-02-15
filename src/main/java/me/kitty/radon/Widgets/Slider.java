@@ -1,23 +1,17 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
-import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.4 {
 import net.minecraft.client.gl.RenderPipelines;
 //? } else {
-/*import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.RenderLayer;
+/*import net.minecraft.client.render.RenderLayer;
  *///? }
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -35,10 +29,11 @@ public class Slider extends SliderWidget {
     private final Consumer<Slider> onPress;
     private final SoundEvent clickSound;
     private final SoundEvent slideSound;
-    private Text text;
-    private int textColor;
+    public Text text;
+    public int textColor;
     private long now;
-    private DrawContext drawContext;
+    public DrawContext drawContext;
+    private Boolean hidden;
 
     public Slider(int x, int y, int width, int height, String text, Consumer<Slider> onPress, SoundEvent slideSound, SoundEvent clickSound, double initialValue) {
 
@@ -50,10 +45,15 @@ public class Slider extends SliderWidget {
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
         this.now = System.currentTimeMillis();
 
+        this.hidden = false;
+
     }
 
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+
+        if (this.hidden) return;
+
         drawContext = context;
 
         Identifier texture;
@@ -73,17 +73,17 @@ public class Slider extends SliderWidget {
 
         }
 
+        //?if >1.21.4 {
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
+
         int handleWidth = 9;
         int handleX = getX() + (int)(this.value * (width - handleWidth));
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
 
         context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
-        //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
-        context.drawGuiTexture(RenderLayer::getGuiTextured, handleTexture, handleX, getY(), handleWidth, height);
          *///? }
 
     }
@@ -127,9 +127,10 @@ public class Slider extends SliderWidget {
 
     }
 
-    public void updateText(String newText) {
-        text = Text.literal(newText).setStyle(Radon.fontStyle);
-        drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+    public void hide() {
+
+        hidden = true;
+
     }
 
 }

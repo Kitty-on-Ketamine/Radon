@@ -27,12 +27,14 @@ public class Input extends TextFieldWidget {
     private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
     private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
 
-    private final Consumer<Input> onPress;
+    private final Consumer<Input> onType;
     private final SoundEvent clickSound;
-    private final SoundEvent slideSound;
+    private final SoundEvent typeSound;
+    private final SoundEvent backSpaceSound;
     private final Text placeholder;
+    private Boolean hidden;
 
-    public Input(int x, int y, int width, int limit, String placeholder, Consumer<Input> onPress, SoundEvent clickSound, SoundEvent slideSound) {
+    public Input(int x, int y, int width, int limit, String placeholder, Consumer<Input> onType, SoundEvent clickSound, SoundEvent typeSound, SoundEvent backSpaceSound) {
 
         super(mc.textRenderer, x + 4, y + 4, width - 10, 16, Text.empty());
 
@@ -41,15 +43,20 @@ public class Input extends TextFieldWidget {
         this.setMaxLength(limit);
         this.setEditableColor(0xFF656565);
 
-        this.onPress = onPress;
+        this.hidden = false;
+
+        this.onType = onType;
         this.clickSound = clickSound;
-        this.slideSound = slideSound;
+        this.typeSound = typeSound;
+        this.backSpaceSound = backSpaceSound;
         this.placeholder = Text.literal(placeholder).setStyle(fontStyle);
 
     }
 
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+
+        if (this.hidden) return;
 
         Identifier texture;
 
@@ -94,9 +101,26 @@ public class Input extends TextFieldWidget {
     @Override
     public void write(String text) {
 
-        mc.getSoundManager().play(PositionedSoundInstance.ui(slideSound, 1.0f, 5.0f * Radon.volume));
+        mc.getSoundManager().play(PositionedSoundInstance.ui(typeSound, 1.0f, 5.0f * Radon.volume));
+        onType.accept(this);
 
         super.write(text);
+
+    }
+
+    @Override
+    public void eraseCharacters(int characterOffset) {
+
+        mc.getSoundManager().play(PositionedSoundInstance.ui(backSpaceSound, 1.0f, 5.0f * Radon.volume));
+        onType.accept(this);
+
+        super.eraseCharacters(characterOffset);
+
+    }
+
+    public void hide() {
+
+        hidden = true;
 
     }
 

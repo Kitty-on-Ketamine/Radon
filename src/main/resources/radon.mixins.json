@@ -4,6 +4,7 @@
   "package": "me.kitty.radon.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ScreenMixin"
   ],
   "client": [
   ],

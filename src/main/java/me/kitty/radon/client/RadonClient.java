@@ -27,7 +27,7 @@ public class RadonClient implements ClientModInitializer {
 
             while (OPEN_MENU.wasPressed()) {
 
-                MinecraftClient.getInstance().setScreen(new ModMenu("Radon Menu"));
+                MinecraftClient.getInstance().setScreen(new ModMenu());
 
             }
 
