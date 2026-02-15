@@ -37,7 +37,7 @@ public class ConceptScreen extends Screen {
                 "Radon",
                 List.of(),
                 0,
-                (button) -> { mc.execute(() -> mc.setScreen(new ModMenu()));},
+                (button) -> mc.execute(() -> mc.setScreen(new ModMenu())),
                 Sound.MENU_CLICK
         ));
 
@@ -49,7 +49,7 @@ public class ConceptScreen extends Screen {
                 "Back",
                 List.of(),
                 0,
-                (button) -> { mc.execute(() -> mc.setScreen(this.origin));},
+                (button) -> mc.execute(() -> mc.setScreen(this.origin)),
                 Sound.MENU_CLICK
         ));
 

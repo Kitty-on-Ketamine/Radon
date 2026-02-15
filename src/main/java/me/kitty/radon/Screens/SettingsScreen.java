@@ -89,7 +89,7 @@ public class SettingsScreen extends Screen {
                 75,
                 256,
                 Radon.inputText,
-                (input) -> {Radon.inputText = input.getText();},
+                (input) -> Radon.inputText = input.getText(),
                 MENU_CLICK,
                 MENU_CLICK,
                 MENU_SLIDE
