@@ -20,6 +20,7 @@ public class WidgetDrawer {
 
     public static HashMap<UUID, Object> data = new HashMap<>();
     private static HashMap<Screen, Integer> heightOffset = new HashMap<>();
+    private static HashMap<Screen, Integer> scrollOffset = new HashMap<>();
     private record Collection(TextWidget label, Button button, Box box) {}
     private static HashMap<Screen, ArrayList<Collection>> screenEntries = new HashMap<>();
 
@@ -90,12 +91,16 @@ public class WidgetDrawer {
     public static void end(Screen screen) {
 
          heightOffset.put(screen, 75);
+         scrollOffset.putIfAbsent(screen, 0);
 
     }
 
     private static void renderCollections(Screen screen, ArrayList<Collection> collections) {
 
-        heightOffset.put(screen, 75);
+        scrollOffset.putIfAbsent(screen, 0);
+
+        int startY = 75 - scrollOffset.get(screen);
+        heightOffset.put(screen, startY);
 
         for (Collection collection : screenEntries.get(screen)) {
 
@@ -107,14 +112,26 @@ public class WidgetDrawer {
 
         for (Collection collection : collections) {
 
-            collection.box.visible = true;
-            collection.label.visible = true;
-            collection.button.hidden = false;
+            int y = heightOffset.get(screen);
 
-            collection.box.y1 = heightOffset.get(screen);
-            collection.box.y2 = heightOffset.get(screen) + 16;
-            collection.label.setY(heightOffset.get(screen) + 1);
-            collection.button.y = heightOffset.get(screen);
+            if (y + 16 < 60 || y > screen.height - 60) {
+
+                collection.box.visible = false;
+                collection.label.visible = false;
+                collection.button.hidden = true;
+
+            } else {
+
+                collection.box.visible = true;
+                collection.label.visible = true;
+                collection.button.hidden = false;
+
+                collection.box.y1 = y;
+                collection.box.y2 = y + 16;
+                collection.label.setY(y + 1);
+                collection.button.y = y;
+
+            }
 
             heightOffset.put(screen, heightOffset.get(screen) + 20);
 
@@ -152,6 +169,39 @@ public class WidgetDrawer {
         if (found.isEmpty()) found = screenEntries.get(screen);
 
         renderCollections(screen, found);
+
+    }
+
+    private static int getMaxScroll(Screen screen) {
+
+        if (!screenEntries.containsKey(screen)) return 0;
+
+        int totalHeight = screenEntries.get(screen).size() * 20;
+
+        int visibleHeight = screen.height - 100;
+
+        return Math.max(0, totalHeight - visibleHeight);
+
+    }
+
+    public static void scroll(Screen screen, double amount) {
+
+        scrollOffset.putIfAbsent(screen, 0);
+
+        int current = scrollOffset.get(screen);
+
+        int scrollSpeed = 12;
+
+        current -= amount * scrollSpeed;
+
+        int maxScroll = getMaxScroll(screen);
+
+        if (current < 0) current = 0;
+        if (current > maxScroll) current = maxScroll;
+
+        scrollOffset.put(screen, current);
+
+        renderCollections(screen, screenEntries.get(screen));
 
     }
 

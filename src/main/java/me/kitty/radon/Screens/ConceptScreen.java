@@ -53,6 +53,9 @@ public class ConceptScreen extends Screen {
                 Sound.MENU_CLICK
         ));
 
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+
         addDrawableChild(new Input(
                 10,
                 height - 16 - 10,
@@ -69,8 +72,6 @@ public class ConceptScreen extends Screen {
                 Sound.MENU_SLIDE
         ));
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
-
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
@@ -81,6 +82,20 @@ public class ConceptScreen extends Screen {
         WidgetDrawer.addButtonRow("Meow 2", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Meow 3", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Meow uwu", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
 
         WidgetDrawer.end(this);
@@ -93,6 +108,14 @@ public class ConceptScreen extends Screen {
         super.render(context, mouseX, mouseY, partialTicks);
 
         context.drawCenteredTextWithShadow(textRenderer, Text.literal(this.title).setStyle(Radon.fontStyle), width / 2, 15, 0xFFFFFFFF);
+
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+
+        WidgetDrawer.scroll(this, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 
     }
 
