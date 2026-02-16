@@ -39,9 +39,6 @@ public class Button extends ClickableWidget {
     public Boolean hidden;
     private DrawContext drawContext;
 
-    public int x;
-    public int y;
-
     public Button(int x, int y, int width, int height, String text, @UnknownNullability List<String> description, int color, Consumer<Button> onPress, SoundEvent clickSound) {
 
         super(x, y, width, height, Text.of(text));
@@ -50,9 +47,6 @@ public class Button extends ClickableWidget {
         this.clickSound = clickSound;
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
         this.color = color;
-
-        this.x = x;
-        this.y = y;
 
         this.hidden = false;
 
@@ -104,11 +98,11 @@ public class Button extends ClickableWidget {
         }
 
         //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, this.x, this.y, width, height);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
         //? } else {
-        /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, this.x, this.y, width, height);
+        /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
          *///? }
-        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
     }
 
@@ -132,7 +126,6 @@ public class Button extends ClickableWidget {
 
     public void updateText(String text) {
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
-        drawContext.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, color);
     }
 
     public void updateColor(int color) {
@@ -159,12 +152,14 @@ public class Button extends ClickableWidget {
 
         }
 
-        drawContext.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+        this.color = textColor;
     }
 
     //? if >1.21.8 {
     @Override
     public void onClick(Click click, boolean doubled) {
+
+        if (this.hidden) return;
 
         onPress.accept(this);
 

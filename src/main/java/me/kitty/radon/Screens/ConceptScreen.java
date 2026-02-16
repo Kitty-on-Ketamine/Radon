@@ -62,11 +62,7 @@ public class ConceptScreen extends Screen {
                 75,
                 15,
                 "Search...",
-                (input) -> {
-
-                    WidgetDrawer.search(this, input.getText());
-
-                    },
+                (input) -> WidgetDrawer.search(this, input.getText()),
                 Sound.MENU_CLICK,
                 Sound.MENU_CLICK,
                 Sound.MENU_SLIDE
@@ -109,6 +105,12 @@ public class ConceptScreen extends Screen {
 
         context.drawCenteredTextWithShadow(textRenderer, Text.literal(this.title).setStyle(Radon.fontStyle), width / 2, 15, 0xFFFFFFFF);
 
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        mc.execute(() -> mc.setScreen(new ConceptScreen(title, origin)));
     }
 
     @Override
