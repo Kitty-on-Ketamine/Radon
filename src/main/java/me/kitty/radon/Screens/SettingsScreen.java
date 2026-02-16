@@ -1,7 +1,6 @@
 package me.kitty.radon.Screens;
 
 import me.kitty.radon.Radon;
-import me.kitty.radon.Utils.DataUtils;
 import me.kitty.radon.Widgets.Button;
 import me.kitty.radon.Widgets.Input;
 import me.kitty.radon.Widgets.Slider;
@@ -10,14 +9,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Style;
+//? if >1.21.8 {
 import net.minecraft.text.StyleSpriteSource;
+//? }
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.joml.Matrix3x2f;
 
 import java.util.List;
 
-import static me.kitty.radon.Radon.scaleMultiplier;
 import static me.kitty.radon.client.Sound.*;
 
 public class SettingsScreen extends Screen {
@@ -68,6 +67,29 @@ public class SettingsScreen extends Screen {
                 Radon.volume
         );
 
+        Button fontButton = new Button(
+                10,
+                90,
+                50,
+                16,
+                String.valueOf(Radon.defaultFont),
+                List.of("Should the default Minecraft font be used or no"),
+                Radon.defaultFont ? 0xff55ff55 : 0xffff5555,
+                (button) -> {
+                    Radon.defaultFont = !Radon.defaultFont;
+                    //? if >1.21.8 {
+                    Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of(Radon.defaultFont ? "minecraft" : "radon", "default")));
+                    //? } else {
+                    /*Radon.fontStyle = Style.EMPTY.withFont(Identifier.of(Radon.defaultFont ? "minecraft" : "radon", "default"));
+                     *///? }
+                    mc.execute(() -> {
+                        mc.reloadResources();
+                        mc.setScreen(new SettingsScreen(title));
+                    });
+                },
+                MENU_CLICK
+        );
+
 //        Button guiScaleButton = new Button(
 //                10,
 //                50,
@@ -95,9 +117,10 @@ public class SettingsScreen extends Screen {
                 MENU_SLIDE
         );
 
-        this.addDrawableChild(backButton);
-        this.addDrawableChild(volumeSlider);
-        this.addDrawableChild(testInput);
+        addDrawableChild(backButton);
+        addDrawableChild(volumeSlider);
+        addDrawableChild(testInput);
+        addDrawableChild(fontButton);
 //        this.addDrawableChild(guiScaleButton);
 
     }

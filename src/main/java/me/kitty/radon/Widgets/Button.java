@@ -6,8 +6,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 //? } else {
 /*import net.minecraft.client.render.RenderLayer;
-*///? }
+ *///? }
+//? if >1.21.8 {
 import net.minecraft.client.gui.Click;
+//? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -32,9 +34,10 @@ public class Button extends ClickableWidget {
 
     private final Consumer<Button> onPress;
     private final SoundEvent clickSound;
-    private final int color;
-    public Text text;
+    private int color;
+    private Text text;
     public Boolean hidden;
+    private DrawContext drawContext;
 
     public int x;
     public int y;
@@ -70,6 +73,8 @@ public class Button extends ClickableWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 
+        drawContext = context;
+
         if (this.hidden) return;
 
         Identifier texture;
@@ -81,10 +86,10 @@ public class Button extends ClickableWidget {
             textColor = 0xFF404040;
 
         } else if (this.isHovered()) {
-            
+
             texture = TEXTURE_HOVER;
             textColor = 0xFFa1a1a1;
-            
+
         } else {
 
             texture = TEXTURE_NORMAL;
@@ -102,7 +107,7 @@ public class Button extends ClickableWidget {
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, this.x, this.y, width, height);
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, this.x, this.y, width, height);
-        *///? }
+         *///? }
         context.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
     }
@@ -115,16 +120,62 @@ public class Button extends ClickableWidget {
     @Override
     public void playDownSound(SoundManager soundManager) {
 
-        soundManager.play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
+        soundManager.play(PositionedSoundInstance.
+                        //? if >1.21.8 {
+                        ui
+                         //? } else {
+                        /*ambient
+                        *///? }
+        (clickSound, 1.0f, 5.0f * Radon.volume));
 
     }
 
+    public void updateText(String text) {
+        this.text = Text.literal(text).setStyle(Radon.fontStyle);
+        drawContext.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, color);
+    }
+
+    public void updateColor(int color) {
+        this.color = color;
+        int textColor;
+
+        if (!this.active) {
+
+            textColor = 0xFF404040;
+
+        } else if (this.isHovered()) {
+
+            textColor = 0xFFa1a1a1;
+
+        } else {
+
+            textColor = 0xFF606060;
+
+        }
+
+        if (this.color != 0) {
+
+            textColor = this.color;
+
+        }
+
+        drawContext.drawCenteredTextWithShadow(mc.textRenderer, this.text, this.x + width / 2, this.y + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+    }
+
+    //? if >1.21.8 {
     @Override
     public void onClick(Click click, boolean doubled) {
 
         onPress.accept(this);
 
     }
+    //? } else {
+    /*@Override
+    public void onClick(double mouseX, double mouseY) {
+        super.onClick(mouseX, mouseY);
+        onPress.accept(this);
+    }
+    *///? }
 
     public void hide() {
 

@@ -19,10 +19,12 @@ public class WidgetDrawer {
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
     public static HashMap<UUID, Object> data = new HashMap<>();
-    private static HashMap<Screen, Integer> heightOffset = new HashMap<>();
-    private static HashMap<Screen, Integer> scrollOffset = new HashMap<>();
+    private final static HashMap<Screen, Integer> heightOffset = new HashMap<>();
+    private final static HashMap<Screen, Integer> scrollOffset = new HashMap<>();
+    private final static HashMap<Screen, Integer> scrollingState = new HashMap<>();
     private record Collection(TextWidget label, Button button, Box box) {}
-    private static HashMap<Screen, ArrayList<Collection>> screenEntries = new HashMap<>();
+    private final static HashMap<Screen, ArrayList<Collection>> screenEntries = new HashMap<>();
+    private final static HashMap<Screen, Long> scrollNow = new HashMap<>();
 
     public static void addButtonRow(String text, List<String> description, Screen screen, Object option) {
 
@@ -69,9 +71,10 @@ public class WidgetDrawer {
                         boolean newValue = !(Boolean) data.get(uuid);
 
                         data.put(uuid, newValue);
-                        button1.text = Text.literal(String.valueOf(newValue)).setStyle(Radon.fontStyle).withColor(newValue ? 0xff55ff55 : 0xffff5555);
+                        button1.updateText(String.valueOf(newValue));
+                        button1.updateColor(newValue ? 0xff55ff55 : 0xffff5555);
 
-                        },
+                    },
                     Sound.MENU_CLICK
             );
 
@@ -92,8 +95,9 @@ public class WidgetDrawer {
 
     public static void end(Screen screen) {
 
-         heightOffset.put(screen, 75);
-         scrollOffset.putIfAbsent(screen, 0);
+        heightOffset.put(screen, 75);
+        scrollOffset.putIfAbsent(screen, 0);
+        scrollNow.put(screen, System.currentTimeMillis());
 
     }
 
@@ -104,7 +108,7 @@ public class WidgetDrawer {
         int startY = 75 - scrollOffset.get(screen);
         heightOffset.put(screen, startY);
 
-        for (Collection collection : screenEntries.get(screen)) {
+        for (Collection collection : collections) {
 
             collection.box.visible = false;
             collection.button.hidden = true;
@@ -115,6 +119,8 @@ public class WidgetDrawer {
         for (Collection collection : collections) {
 
             int y = heightOffset.get(screen);
+
+            heightOffset.put(screen, heightOffset.get(screen) + 20);
 
             if (y < 75 || y > screen.height - 60) {
 
@@ -135,11 +141,7 @@ public class WidgetDrawer {
 
             }
 
-            heightOffset.put(screen, heightOffset.get(screen) + 20);
-
         }
-
-        heightOffset.put(screen, 75);
 
     }
 
@@ -168,7 +170,7 @@ public class WidgetDrawer {
 
         }
 
-        if (found.isEmpty()) found = screenEntries.get(screen);
+        //if (found.isEmpty()) found = screenEntries.get(screen);
 
         renderCollections(screen, found);
 
@@ -192,9 +194,9 @@ public class WidgetDrawer {
 
         int current = scrollOffset.get(screen);
 
-        int scrollSpeed = 12;
+        int scrollSpeed = 5;
 
-        current -= amount * scrollSpeed;
+        current -= (int) (amount * scrollSpeed * (float) (scrollingState.getOrDefault(screen, 1) / 10));
 
         int maxScroll = getMaxScroll(screen);
 
@@ -202,6 +204,12 @@ public class WidgetDrawer {
         if (current > maxScroll) current = maxScroll;
 
         scrollOffset.put(screen, current);
+
+        if (scrollingState.getOrDefault(screen, 0) < 20) {
+
+            scrollingState.put(screen, Math.min(scrollingState.getOrDefault(screen, 0) + 2, 20));
+
+        }
 
         renderCollections(screen, screenEntries.get(screen));
 

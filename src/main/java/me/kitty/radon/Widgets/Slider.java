@@ -7,7 +7,9 @@ import net.minecraft.client.gl.RenderPipelines;
 //? } else {
 /*import net.minecraft.client.render.RenderLayer;
  *///? }
+//? if >1.21.8 {
 import net.minecraft.client.gui.Click;
+//? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -80,7 +82,7 @@ public class Slider extends SliderWidget {
         int handleX = getX() + (int)(this.value * (width - handleWidth));
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
 
-        context.drawCenteredTextWithShadow(mc.textRenderer, Text.of(this.text), getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
+        context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
         //? } else {
         /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
@@ -98,7 +100,13 @@ public class Slider extends SliderWidget {
 
         if (System.currentTimeMillis() - this.now > 45) {
 
-            mc.getSoundManager().play(PositionedSoundInstance.ui(slideSound, 1.0f, 5.0f * Radon.volume));
+        mc.getSoundManager().play(PositionedSoundInstance.
+                    //? if >1.21.8 {
+                    ui
+                     //? } else {
+                            /*ambient
+                    *///? }
+        (slideSound, 1.0f, 5.0f * Radon.volume));
             this.now = System.currentTimeMillis();
 
         }
@@ -107,6 +115,7 @@ public class Slider extends SliderWidget {
 
     }
 
+    //?if >1.21.8 {
     @Override
     public void onClick(Click click, boolean doubled) {
 
@@ -114,17 +123,30 @@ public class Slider extends SliderWidget {
 
     }
 
-    public void updateText(String text) {
-        this.text = Text.literal(text).setStyle(Radon.fontStyle);
-
-        drawContext.drawCenteredTextWithShadow(mc.textRenderer, Text.of(text), getX() + width / 2, getY() + (height - 8) / 2, textColor);
-
-    }
-
     @Override
     public void onRelease(Click click) {
 
         mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 0.8f, 5.0f * Radon.volume));
+
+    }
+     //? } else {
+    /*@Override
+    public void onClick(double mouseX, double mouseY) {
+        super.onClick(mouseX, mouseY);
+        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 1.0f, 5.0f * Radon.volume));
+    }
+
+    @Override
+    public void onRelease(double mouseX, double mouseY) {
+        super.onRelease(mouseX, mouseY);
+        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 0.8f, 5.0f * Radon.volume));
+    }
+    *///? }
+
+    public void updateText(String text) {
+        this.text = Text.literal(text).setStyle(Radon.fontStyle);
+
+        drawContext.drawCenteredTextWithShadow(mc.textRenderer, text, getX() + width / 2, getY() + (height - 8) / 2, textColor);
 
     }
 

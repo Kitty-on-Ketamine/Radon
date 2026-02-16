@@ -35,11 +35,7 @@ public class ModMenu extends Screen {
                 "Exit",
                 List.of(),
                 0,
-                (button) -> {
-
-                    mc.setScreen(null);
-
-                },
+                (button) -> mc.setScreen(null),
                 MENU_CLICK
         );
 

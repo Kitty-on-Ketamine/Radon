@@ -7,9 +7,12 @@ import net.minecraft.client.gl.RenderPipelines;
 //? } else {
 /*import net.minecraft.client.render.RenderLayer;
  *///? }
+//? if >1.21.8 {
 import net.minecraft.client.gui.Click;
+//? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -84,6 +87,7 @@ public class Input extends TextFieldWidget {
 
     }
 
+    //?if >1.21.8 {
     @Override
     public void onClick(Click click, boolean doubled) {
 
@@ -97,11 +101,30 @@ public class Input extends TextFieldWidget {
         mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 0.8f, 5.0f * Radon.volume));
 
     }
+     //? } else {
+    /*@Override
+    public void onClick(double mouseX, double mouseY) {
+        super.onClick(mouseX, mouseY);
+        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 1.0f, 5.0f * Radon.volume));
+    }
+
+    @Override
+    public void onRelease(double mouseX, double mouseY) {
+        super.onRelease(mouseX, mouseY);
+        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 0.8f, 5.0f * Radon.volume));
+    }
+    *///? }
 
     @Override
     public void write(String text) {
 
-        mc.getSoundManager().play(PositionedSoundInstance.ui(typeSound, 1.0f, 5.0f * Radon.volume));
+        mc.getSoundManager().play(PositionedSoundInstance.
+                //? if >1.21.8 {
+                ui
+                //? } else {
+                /*ambient
+                *///? }
+        (typeSound, 1.0f, 5.0f * Radon.volume));
         onType.accept(this);
 
         super.write(text);
@@ -111,7 +134,13 @@ public class Input extends TextFieldWidget {
     @Override
     public void eraseCharacters(int characterOffset) {
 
-        mc.getSoundManager().play(PositionedSoundInstance.ui(backSpaceSound, 1.0f, 5.0f * Radon.volume));
+        mc.getSoundManager().play(PositionedSoundInstance.
+                        //? if >1.21.8 {
+                        ui
+                         //? } else {
+                        /*ambient
+                        *///? }
+        (backSpaceSound, 1.0f, 5.0f * Radon.volume));
         onType.accept(this);
 
         super.eraseCharacters(characterOffset);

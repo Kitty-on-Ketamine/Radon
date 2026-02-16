@@ -18,7 +18,11 @@ public class RadonClient implements ClientModInitializer {
                         "key.radon.open_menu",
                         InputUtil.Type.KEYSYM,
                         InputUtil.GLFW_KEY_RIGHT_SHIFT,
+                        //? >1.21.8 {
                         KeyBinding.Category.DEBUG
+                        //? } else {
+                        /*"DEBUG"
+                        *///? }
                 )
         );
 
