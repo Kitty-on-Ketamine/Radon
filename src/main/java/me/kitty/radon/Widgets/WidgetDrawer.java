@@ -223,13 +223,13 @@ public class WidgetDrawer {
         int startY = 75 - scrollOffset.get(screen);
         heightOffset.put(screen, startY);
 
-        for (Collection collection : collections) {
+        for (Collection collection : screenEntries.get(screen)) {
 
             int y = heightOffset.get(screen);
 
             heightOffset.put(screen, heightOffset.get(screen) + 20);
 
-            if (y < 75 || y > screen.height - 60) {
+            if (y < 75 || y > screen.height - 60 || !collections.contains(collection)) {
 
                 /*collection.box.visible = false;
                 collection.label.visible = false;
