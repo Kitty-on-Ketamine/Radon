@@ -231,6 +231,10 @@ public class WidgetDrawer {
 
             if (y < 75 || y > screen.height - 60 || !collections.contains(collection)) {
 
+                if (!collections.contains(collection)) {
+                    heightOffset.put(screen, heightOffset.get(screen) - 20);
+                }
+
                 /*collection.box.visible = false;
                 collection.label.visible = false;
                 collection.widget.hidden = true;*/
