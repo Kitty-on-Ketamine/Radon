@@ -23,13 +23,15 @@ public class SettingsScreen extends Screen {
 
     MinecraftClient mc = MinecraftClient.getInstance();
 
+    Screen parent;
     String title;
 
-    public SettingsScreen(String title) {
+    public SettingsScreen(String title, Screen parent) {
 
         super(Text.literal(title));
 
         this.title = title;
+        this.parent = parent;
 
     }
 
@@ -40,13 +42,13 @@ public class SettingsScreen extends Screen {
 
         Button backButton = new Button(
                 10,
-                10,
+                5,
                 50,
                 16,
                 "Back",
                 List.of(),
                 0,
-                (button) -> mc.execute(() -> mc.setScreen(new ModMenu())),
+                (button) -> mc.execute(() -> mc.setScreen(parent)),
                 MENU_CLICK
         );
 
@@ -84,7 +86,7 @@ public class SettingsScreen extends Screen {
                      *///? }
                     mc.execute(() -> {
                         mc.reloadResources();
-                        mc.setScreen(new SettingsScreen(title));
+                        mc.setScreen(new SettingsScreen(title, parent));
                     });
                 },
                 MENU_CLICK

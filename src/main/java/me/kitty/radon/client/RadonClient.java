@@ -1,9 +1,13 @@
 package me.kitty.radon.client;
 
+import me.kitty.radon.Screens.ConfigScreen;
 import me.kitty.radon.Screens.ModMenu;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -36,6 +40,13 @@ public class RadonClient implements ClientModInitializer {
             }
 
         });
+
+        for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
+            ConfigScreen screen = container.getEntrypoint();
+            ModContainer mod = container.getProvider();
+            ModMenuIntegration.addScreen(mod.getMetadata().getId(), screen);
+
+        }
 
     }
 

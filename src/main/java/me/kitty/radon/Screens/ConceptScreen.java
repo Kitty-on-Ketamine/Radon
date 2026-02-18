@@ -68,7 +68,20 @@ public class ConceptScreen extends Screen {
                 Sound.MENU_SLIDE
         ));
 
+        enum cica {
+
+            meow,
+            mreow1,
+            mreow2,
+            mreow3,
+            mreow4,
+            mreow5,
+
+        }
+
+        WidgetDrawer.addSliderRow("Meow 5", List.of("meow"), this, 83, 10, 110);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
+        WidgetDrawer.addButtonRow("Enable Mod", List.of("uwu"), this, cica.mreow1);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);
         WidgetDrawer.addButtonRow("Enable Mod", List.of("meow"), this, true);

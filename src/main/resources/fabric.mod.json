@@ -5,7 +5,7 @@
 
   "name": "Radon",
   "description": "",
-  "authors": ["JGJ52", "Polokalap", "amethyysttt"],
+  "authors": ["JGJ52", "Polokalap"],
   "contact": {},
 
   "license": "GPL-3.0",
@@ -14,7 +14,8 @@
   "environment": "client",
   "entrypoints": {
     "client": ["me.kitty.radon.client.RadonClient"],
-    "main": ["me.kitty.radon.Radon"]
+    "main": ["me.kitty.radon.Radon"],
+    "modmenu": ["me.kitty.radon.client.ModMenuIntegration"]
   },
 
   "mixins": [

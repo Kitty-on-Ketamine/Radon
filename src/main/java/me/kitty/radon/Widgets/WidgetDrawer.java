@@ -1,12 +1,13 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.DataUtils;
 import me.kitty.radon.client.Sound;
 import me.kitty.radon.client.IScreenMixin;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -19,24 +20,27 @@ public class WidgetDrawer {
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
     public static HashMap<UUID, Object> data = new HashMap<>();
-    private final static HashMap<String, Integer> heightOffset = new HashMap<>();
-    private final static HashMap<String, Integer> scrollOffset = new HashMap<>();
-    private record Collection(TextWidget label, Button button, Box box) {}
+    private final static HashMap<Screen, Integer> heightOffset = new HashMap<>();
+    private final static HashMap<Screen, Integer> scrollOffset = new HashMap<>();
+    private record Collection(TextWidget label, Widget widget, Box box) {}
     private final static HashMap<Screen, ArrayList<Collection>> screenEntries = new HashMap<>();
-    private final static HashMap<Screen, Long> scrollNow = new HashMap<>();
+
+    public static void removeOffset(Screen screen) {
+        heightOffset.remove(screen);
+        scrollOffset.remove(screen);
+        screenEntries.remove(screen);
+    }
 
     public static void addButtonRow(String text, List<String> description, Screen screen, Object option) {
 
-        heightOffset.putIfAbsent(screen.getClass().getName(), 75);
+        heightOffset.putIfAbsent(screen, 75);
 
         int sideOffset = 10;
+        UUID uuid = UUID.randomUUID();
 
         if (option instanceof Boolean) {
 
-            UUID uuid = UUID.randomUUID();
-            int height = heightOffset.get(screen.getClass().getName());
-
-            data.put(uuid, option);
+            int height = heightOffset.get(screen);
 
             Box box = new Box(
                     sideOffset,
@@ -67,6 +71,8 @@ public class WidgetDrawer {
                     (Boolean) option ? 0xff55ff55 : 0xffff5555,
                     (button1) -> {
 
+                        data.putIfAbsent(uuid, option);
+
                         boolean newValue = !(Boolean) data.get(uuid);
 
                         data.put(uuid, newValue);
@@ -84,9 +90,120 @@ public class WidgetDrawer {
             screenEntries.putIfAbsent(screen, new ArrayList<>());
             screenEntries.get(screen).add(new Collection(label, button, box));
 
+        } else if (option instanceof Enum<?> enumOption) {
+
+            int height = heightOffset.get(screen);
+
+            data.put(uuid, enumOption);
+
+            Box box = new Box(
+                    sideOffset,
+                    height,
+                    screen.width - sideOffset,
+                    height + 16,
+                    0x33000000,
+                    0xffffffff,
+                    description
+            );
+
+            TextWidget label = new TextWidget(
+                    sideOffset,
+                    height + 1,
+                    200,
+                    16,
+                    Text.literal(text).setStyle(Radon.fontStyle),
+                    mc.textRenderer
+            );
+
+            Button button = new Button(
+                    screen.width - sideOffset - 75,
+                    height,
+                    75,
+                    16,
+                    String.valueOf(option),
+                    List.of(),
+                    0,
+                    (button1) -> {
+
+                        data.put(uuid, DataUtils.next((Enum<?>) data.get(uuid)));
+                        button1.updateText(data.get(uuid).toString());
+
+                    },
+                    Sound.MENU_CLICK
+            );
+
+            ((IScreenMixin) screen).addDrawableChildPublic(box);
+            ((IScreenMixin) screen).addDrawableChildPublic(button);
+            ((IScreenMixin) screen).addDrawableChildPublic(label);
+
+            screenEntries.putIfAbsent(screen, new ArrayList<>());
+            screenEntries.get(screen).add(new Collection(label, button, box));
+
         }
 
-        heightOffset.put(screen.getClass().getName(), heightOffset.get(screen.getClass().getName()) + 20);
+        heightOffset.put(screen, heightOffset.get(screen) + 20);
+
+        renderCollections(screen, screenEntries.get(screen));
+
+    }
+
+    public static void addSliderRow(String text, List<String> description, Screen screen, int initialValue, int min, int max) {
+
+        heightOffset.putIfAbsent(screen, 75);
+
+        int sideOffset = 10;
+
+        UUID uuid = UUID.randomUUID();
+        int height = heightOffset.get(screen);
+
+        data.put(uuid, initialValue);
+
+        Box box = new Box(
+                sideOffset,
+                height,
+                screen.width - sideOffset,
+                height + 16,
+                0x33000000,
+                0xffffffff,
+                description
+        );
+
+        TextWidget label = new TextWidget(
+                sideOffset,
+                height + 1,
+                200,
+                16,
+                Text.literal(text).setStyle(Radon.fontStyle),
+                mc.textRenderer
+        );
+
+        Slider slider = new Slider(
+                screen.width - sideOffset - 75,
+                height,
+                75,
+                16,
+                String.valueOf(initialValue),
+                (slider1) -> {
+
+                    long value = Math.round((slider1.getValue() * 100) / 100 * (max - min) + min);
+
+                    data.put(uuid, value);
+                    slider1.updateText(String.valueOf(value));
+
+                },
+                Sound.MENU_CLICK,
+                Sound.MENU_SLIDE,
+                (initialValue - min) / (double)(max - min)
+        );
+
+        ((IScreenMixin) screen).addDrawableChildPublic(box);
+        ((IScreenMixin) screen).addDrawableChildPublic(slider);
+        ((IScreenMixin) screen).addDrawableChildPublic(label);
+
+        screenEntries.putIfAbsent(screen, new ArrayList<>());
+        screenEntries.get(screen).add(new Collection(label, slider, box));
+
+        heightOffset.put(screen, heightOffset.get(screen) + 20);
 
         renderCollections(screen, screenEntries.get(screen));
 
@@ -94,46 +211,45 @@ public class WidgetDrawer {
 
     public static void end(Screen screen) {
 
-        heightOffset.put(screen.getClass().getName(), 75);
-        scrollOffset.putIfAbsent(screen.getClass().getName(), 0);
-        scrollNow.put(screen, System.currentTimeMillis());
+        heightOffset.put(screen, 75);
+        scrollOffset.putIfAbsent(screen, 0);
 
     }
 
     private static void renderCollections(Screen screen, ArrayList<Collection> collections) {
 
-        scrollOffset.putIfAbsent(screen.getClass().getName(), 0);
+        scrollOffset.putIfAbsent(screen, 0);
 
-        int startY = 75 - scrollOffset.get(screen.getClass().getName());
-        heightOffset.put(screen.getClass().getName(), startY);
+        int startY = 75 - scrollOffset.get(screen);
+        heightOffset.put(screen, startY);
 
         for (Collection collection : collections) {
 
-            int y = heightOffset.get(screen.getClass().getName());
+            int y = heightOffset.get(screen);
 
-            heightOffset.put(screen.getClass().getName(), heightOffset.get(screen.getClass().getName()) + 20);
+            heightOffset.put(screen, heightOffset.get(screen) + 20);
 
             if (y < 75 || y > screen.height - 60) {
 
                 /*collection.box.visible = false;
                 collection.label.visible = false;
-                collection.button.hidden = true;*/
+                collection.widget.hidden = true;*/
 
                 collection.box.y1 = -100;
                 collection.box.y2 = -100;
                 collection.label.setY(-100);
-                collection.button.setY(-100);
+                collection.widget.setY(-100);
 
             } else {
 
                 /*collection.box.visible = true;
                 collection.label.visible = true;
-                collection.button.hidden = false;*/
+                collection.widget.hidden = false;*/
 
                 collection.box.y1 = y;
                 collection.box.y2 = y + 16;
                 collection.label.setY(y + 1);
-                collection.button.setY(y);
+                collection.widget.setY(y);
 
             }
 
@@ -186,9 +302,9 @@ public class WidgetDrawer {
 
     public static void scroll(Screen screen, double amount) {
 
-        scrollOffset.putIfAbsent(screen.getClass().getName(), 0);
+        scrollOffset.putIfAbsent(screen, 0);
 
-        int current = scrollOffset.get(screen.getClass().getName());
+        int current = scrollOffset.get(screen);
 
         int scrollSpeed = 10;
 
@@ -199,7 +315,7 @@ public class WidgetDrawer {
         if (current < 0) current = 0;
         if (current > maxScroll) current = maxScroll;
 
-        scrollOffset.put(screen.getClass().getName(), current);
+        scrollOffset.put(screen, current);
 
         renderCollections(screen, screenEntries.get(screen));
 
