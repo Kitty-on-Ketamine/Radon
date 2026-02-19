@@ -1,6 +1,7 @@
-package me.kitty.radon.Screens;
+package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Screens.ModMenu;
 import me.kitty.radon.Widgets.Button;
 import me.kitty.radon.Widgets.StaticBox;
 import me.kitty.radon.Widgets.WidgetDrawer;
@@ -37,7 +38,7 @@ public abstract class ConfigScreen extends Screen {
                 "Radon",
                 List.of(),
                 0,
-                (button) -> mc.execute(() -> mc.setScreen(new ModMenu())),
+                (button) -> mc.execute(() -> mc.setScreen(new ModMenu(this))),
                 Sound.MENU_CLICK
         ));
 
@@ -72,10 +73,10 @@ public abstract class ConfigScreen extends Screen {
     public void setParent(Screen parent) {
         this.parent = parent;
     }
-    public void addButtonRow(String description, List<String> tooltipTexts, Object option) {
-        WidgetDrawer.addButtonRow(description, tooltipTexts, this, option);
+    public ButtonRow buttonRow(String description, List<String> tooltipTexts, Object option) {
+        return new ButtonRow(description, tooltipTexts, option, this);
     }
-    public void addSliderRow(String description, List<String> tooltipTexts, int initialValue, int min, int max) {
-        WidgetDrawer.addSliderRow(description, tooltipTexts, this, initialValue, min, max);
+    public SliderRow sliderRow(String description, List<String> tooltipTexts, int initialValue, int min, int max) {
+        return new SliderRow(description, tooltipTexts, initialValue, min, max, this);
     }
 }

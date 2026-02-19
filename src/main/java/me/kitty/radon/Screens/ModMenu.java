@@ -1,17 +1,14 @@
 package me.kitty.radon.Screens;
 
 import me.kitty.radon.Radon;
-import me.kitty.radon.Widgets.Box;
-import me.kitty.radon.Widgets.Button;
-import me.kitty.radon.Widgets.StaticBox;
-import me.kitty.radon.client.ModMenuIntegration;
+import me.kitty.radon.Widgets.*;
+import me.kitty.radon.api.ConfigScreen;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.render.state.GuiRenderState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.texture.NativeImage;
@@ -83,7 +80,12 @@ public class ModMenu extends Screen {
                 parent != null ? "Back" : "Exit",
                 List.of(),
                 0,
-                (button) -> mc.setScreen(parent),
+                (button) -> {
+                    if (parent != null && parent instanceof ConfigScreen) {
+                        WidgetDrawer.removeOffset(parent);
+                    }
+                    mc.setScreen(parent);
+                },
                 MENU_CLICK
         );
 
@@ -135,11 +137,15 @@ public class ModMenu extends Screen {
                 }
             }
 
-            this.addDrawableChild(new Box(
+            this.addDrawableChild(new RectBox(
                     50 + offset - 20,
                     50 - 4,
                     100 + offset,
                     50 + textRenderer.fontHeight + 2,
+                    false,
+                    true,
+                    true,
+                    false,
                     0x88000000,
                     0xffffffff,
                     List.of()

@@ -20,6 +20,8 @@ public class WidgetDrawer {
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
     public static HashMap<UUID, Object> data = new HashMap<>();
+    public static HashMap<UUID, Button> buttons = new HashMap<>();
+    public static HashMap<UUID, Slider> sliders = new HashMap<>();
     private final static HashMap<Screen, Integer> heightOffset = new HashMap<>();
     private final static HashMap<Screen, Integer> scrollOffset = new HashMap<>();
     private record Collection(TextWidget label, Widget widget, Box box) {}
@@ -31,7 +33,7 @@ public class WidgetDrawer {
         screenEntries.remove(screen);
     }
 
-    public static void addButtonRow(String text, List<String> description, Screen screen, Object option) {
+    public static UUID addButtonRow(String text, List<String> description, Screen screen, Object option) {
 
         heightOffset.putIfAbsent(screen, 75);
 
@@ -82,6 +84,7 @@ public class WidgetDrawer {
                     },
                     Sound.MENU_CLICK
             );
+            buttons.put(uuid, button);
 
             ((IScreenMixin) screen).addDrawableChildPublic(box);
             ((IScreenMixin) screen).addDrawableChildPublic(button);
@@ -145,9 +148,23 @@ public class WidgetDrawer {
 
         renderCollections(screen, screenEntries.get(screen));
 
+        return uuid;
+
     }
 
-    public static void addSliderRow(String text, List<String> description, Screen screen, int initialValue, int min, int max) {
+    public static void updateButton(UUID uuid, Object option) {
+        Button button = buttons.get(uuid);
+        if (option instanceof Boolean) {
+            data.put(uuid, option);
+            button.updateText(String.valueOf(option));
+            button.updateColor((Boolean) option ? 0xff55ff55 : 0xffff5555);
+        } else if (option instanceof Enum<?> enumOption) {
+            data.put(uuid, enumOption);
+            button.updateText(enumOption.name());
+        }
+    }
+
+    public static UUID addSliderRow(String text, List<String> description, Screen screen, int initialValue, int min, int max) {
 
         heightOffset.putIfAbsent(screen, 75);
 
@@ -195,6 +212,7 @@ public class WidgetDrawer {
                 Sound.MENU_SLIDE,
                 (initialValue - min) / (double)(max - min)
         );
+        sliders.put(uuid, slider);
 
         ((IScreenMixin) screen).addDrawableChildPublic(box);
         ((IScreenMixin) screen).addDrawableChildPublic(slider);
@@ -207,6 +225,16 @@ public class WidgetDrawer {
 
         renderCollections(screen, screenEntries.get(screen));
 
+        return uuid;
+
+    }
+
+    public static void updateSlider(UUID uuid, double value, int min, int max) {
+        Slider slider = sliders.get(uuid);
+        long v = Math.round((value * 100) / 100 * (max - min) + min);
+
+        data.put(uuid, v);
+        slider.updateText(String.valueOf(v));
     }
 
     public static void end(Screen screen) {

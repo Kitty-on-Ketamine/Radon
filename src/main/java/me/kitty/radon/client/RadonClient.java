@@ -1,6 +1,6 @@
 package me.kitty.radon.client;
 
-import me.kitty.radon.Screens.ConfigScreen;
+import me.kitty.radon.api.ConfigScreen;
 import me.kitty.radon.Screens.ModMenu;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
