@@ -57,7 +57,7 @@ public class ModMenu extends Screen {
                     50 + offset - 20,
                     50 - 4,
                     0, 0,
-                    16, 16,
+                    18, 18,
                     16, 16
                 );
             }
@@ -118,7 +118,7 @@ public class ModMenu extends Screen {
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
 
             ModContainer mod = container.getProvider();
-            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(16);
+            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(18);
 
             Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
 
@@ -148,7 +148,8 @@ public class ModMenu extends Screen {
                     false,
                     0x88000000,
                     0xffffffff,
-                    List.of()
+                    List.of(),
+                    false
             ));
 
             this.addDrawableChild(new TextWidget(

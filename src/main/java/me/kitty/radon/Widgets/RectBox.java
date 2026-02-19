@@ -32,12 +32,13 @@ public class RectBox implements Drawable, Element, Selectable {
     private final List<Text> tooltip;
     private Boolean hidden;
     public boolean visible;
+    public boolean isStatic;
     public HashMap<RectBox, Long> now = new HashMap<>();
 
     private boolean on = false;
     private int fade = 0;
 
-    public RectBox(int x1, int y1, int x2, int y2, boolean side1, boolean side2, boolean side3, boolean side4, int color, int outline, List<String> tooltip) {
+    public RectBox(int x1, int y1, int x2, int y2, boolean side1, boolean side2, boolean side3, boolean side4, int color, int outline, List<String> tooltip, boolean isStatic) {
 
         this.x1 = x1;
         this.y1 = y1;
@@ -49,6 +50,7 @@ public class RectBox implements Drawable, Element, Selectable {
         this.side4 = side4;
         this.color = color;
         this.outline = outline;
+        this.isStatic = isStatic;
 
         this.hidden = false;
         this.visible = true;
@@ -83,7 +85,9 @@ public class RectBox implements Drawable, Element, Selectable {
 
         }
 
-        if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
+        if (isStatic) on = true;
+
+        if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2 || isStatic) {
 
             if (!on) {
 
@@ -190,21 +194,35 @@ public class RectBox implements Drawable, Element, Selectable {
         }
 
         // LEFT
-        context.fill(
-                x1 - 3,
-                y1 - 2,
-                x1 - 2,
-                y2 + 2,
-                outlineColor
-        );
+        if (side4) {
 
-        context.fill(
-                x1 - 4,
-                y1 - 2,
-                x1 - 3,
-                y2 + 2,
-                outlineColor
-        );
+            context.fill(
+                    x1 - 3,
+                    y1 - 2,
+                    x1 - 2,
+                    y2 + 2,
+                    outlineColor
+            );
+
+            context.fill(
+                    x1 - 4,
+                    y1 - 2,
+                    x1 - 3,
+                    y2 + 2,
+                    outlineColor
+            );
+
+        } else {
+
+            context.fill(
+                    x1 - 4,
+                    y1 - 2,
+                    x1 - 2,
+                    y2 + 4,
+                    outlineColor
+            );
+
+        }
 
         // RIGHT
         if (side2) {

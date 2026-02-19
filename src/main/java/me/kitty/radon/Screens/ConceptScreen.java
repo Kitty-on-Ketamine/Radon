@@ -6,6 +6,7 @@ import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -108,6 +109,30 @@ public class ConceptScreen extends Screen {
         WidgetDrawer.addButtonRow("Meow 5", List.of("meow"), this, true);
 
         WidgetDrawer.end(this);
+
+        this.addDrawableChild(new RectBox(
+                this.width / 2 - 30,
+                37,
+                this.width / 2 + 30,
+                55,
+                false,
+                false,
+                true,
+                true,
+                0x880000,
+                0xffffffff,
+                List.of(),
+                true
+        ));
+
+        this.addDrawableChild(new TextWidget(
+                this.width / 2 - textRenderer.getWidth("teszt") / 2,
+                35,
+                60,
+                textRenderer.fontHeight,
+                Text.literal("teszt").setStyle(Radon.fontStyle),
+                textRenderer
+        ));
 
     }
 
