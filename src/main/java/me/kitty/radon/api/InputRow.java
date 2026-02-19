@@ -20,7 +20,7 @@ public class InputRow extends Row {
 
         input = new Input(
                 screen.width - 10 - 75,
-                screen.getHeightOffset() + 5,
+                screen.getHeightOffset() + 4,
                 75,
                 16,
                 placeholder,

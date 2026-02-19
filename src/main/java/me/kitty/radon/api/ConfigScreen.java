@@ -126,7 +126,7 @@ public abstract class ConfigScreen extends Screen {
                 row.getBox().y1 = y;
                 row.getBox().y2 = y + 16;
                 row.getLabel().setY(y + 1);
-                row.getWidget().setY((row.getWidget() instanceof Input) ? y + 5 : y);
+                row.getWidget().setY((row.getWidget() instanceof Input) ? y + 4 : y);
             }
         }
     }
