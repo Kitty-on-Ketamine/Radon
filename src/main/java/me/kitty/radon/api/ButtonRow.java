@@ -1,24 +1,89 @@
 package me.kitty.radon.api;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.kitty.radon.Utils.DataUtils;
+import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.Widgets.Button;
 import me.kitty.radon.client.IScreenMixin;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.gui.widget.Widget;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ButtonRow extends Row {
     private Object value;
-    private final Button button;
+    private Button button;
+    private final List<Consumer<Object>> consumers = new ArrayList<>();
 
     ButtonRow(String description, List<String> tooltip, Object value, ConfigScreen screen) {
         super(description, tooltip, screen);
         this.value = value;
+
+        JsonObject cfg = screen.getSaver().load();
+        if (cfg != null) {
+            JsonElement val = cfg.get(description);
+            if (value instanceof Boolean) {
+                if (val == null) {
+                    cfg.addProperty(description, ((Boolean) value));
+                }
+                boolean v = cfg.get(description).getAsBoolean();
+                TickUtil.runNextTick(() -> setValue(v, false));
+            } else if (value instanceof Enum<?> enumOption) {
+                if (val == null) {
+                    cfg.addProperty(description, "");
+                }
+                String v = cfg.get(description).getAsString();
+                if (!v.isEmpty()) {
+                    Class<Enum> enumClass = (Class<Enum>) enumOption.getClass();
+                    Enum<?> e = Enum.valueOf(enumClass, v);
+                    TickUtil.runNextTick(() -> setValue(e));
+                }
+            }
+        }
+
+        subscribe(v -> {
+            JsonObject config = screen.getSaver().load();
+            if (config == null) return;
+            config.addProperty(description, v.toString());
+            screen.getSaver().save(config);
+        });
+    }
+    public Object getValue() {
+        return value;
+    }
+    private void setValue(Object value, Boolean subscribe) {
+        this.value = value;
+        if (!initialized) return;
+        if (this.value instanceof Boolean v) {
+            button.updateText(String.valueOf(v));
+            button.updateColor(v ? 0xff55ff55 : 0xffff5555);
+        } else if (this.value instanceof Enum<?> enumOption) {
+            button.updateText(enumOption.name());
+        }
+        if (subscribe) {
+            for (Consumer<Object> consumer : consumers) {
+                consumer.accept(this.value);
+            }
+        }
+    }
+    public void setValue(Object value) {
+        setValue(value, true);
+    }
+    public void subscribe(Consumer<Object> consumer) {
+        consumers.add(consumer);
+    }
+
+    @Override
+    void reRender() {
+        super.reRender();
+
         if (this.value instanceof Boolean) {
             button = new Button(
                     screen.width - 10 - 75,
-                    screen.getHeightOffset(),
+                    height,
                     75,
                     16,
                     String.valueOf(this.value),
@@ -29,39 +94,33 @@ public class ButtonRow extends Row {
                         this.value = !val;
                         b.updateText(String.valueOf(!val));
                         b.updateColor(!val ? 0xff55ff55 : 0xffff5555);
+                        for (Consumer<Object> consumer : consumers) {
+                            consumer.accept(this.value);
+                        }
                     },
                     Sound.MENU_CLICK
             );
         } else if (this.value instanceof Enum<?> enumOption) {
             button = new Button(
                     screen.width - 10 - 75,
-                    screen.getHeightOffset(),
+                    height,
                     75,
                     16,
                     String.valueOf(enumOption),
                     List.of(),
                     0,
                     b -> {
-                        this.value = DataUtils.next(enumOption);
+                        this.value = DataUtils.next((Enum<?>) this.value);
                         b.updateText(String.valueOf(this.value));
+                        for (Consumer<Object> consumer : consumers) {
+                            consumer.accept(this.value);
+                        }
                     },
                     Sound.MENU_CLICK
             );
         } else throw new IllegalArgumentException();
+
         ((IScreenMixin) screen).addDrawableChildPublic(button);
-    }
-    public Object getValue() {
-        return value;
-    }
-    public void setValue(Object value) {
-        if (timestamp + 1000 > System.currentTimeMillis()) return;
-        this.value = value;
-        if (this.value instanceof Boolean v) {
-            button.updateText(String.valueOf(!v));
-            button.updateColor(!v ? 0xff55ff55 : 0xffff5555);
-        } else if (this.value instanceof Enum<?> enumOption) {
-            button.updateText(String.valueOf(enumOption));
-        }
     }
 
     @Override

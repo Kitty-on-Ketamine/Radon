@@ -125,9 +125,10 @@ public class Input extends TextFieldWidget {
                 /*ambient
                 *///? }
         (typeSound, 1.0f, 5.0f * Radon.volume));
-        onType.accept(this);
 
         super.write(text);
+
+        onType.accept(this);
 
     }
 
@@ -141,9 +142,9 @@ public class Input extends TextFieldWidget {
                         /*ambient
                         *///? }
         (backSpaceSound, 1.0f, 5.0f * Radon.volume));
-        onType.accept(this);
 
         super.eraseCharacters(characterOffset);
+        onType.accept(this);
 
     }
 

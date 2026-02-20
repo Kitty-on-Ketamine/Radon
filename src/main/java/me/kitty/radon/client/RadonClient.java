@@ -1,7 +1,10 @@
 package me.kitty.radon.client;
 
+import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.api.ConfigScreen;
 import me.kitty.radon.Screens.ModMenu;
+import me.kitty.radon.api.Row;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -12,7 +15,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RadonClient implements ClientModInitializer {
+
+    public static Map<ConfigScreen, ModContainer> modContainers = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -39,14 +47,18 @@ public class RadonClient implements ClientModInitializer {
 
             }
 
+            System.out.println(Radon.volume);
         });
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
             ConfigScreen screen = container.getEntrypoint();
             ModContainer mod = container.getProvider();
+            modContainers.put(screen, mod);
             ModMenuIntegration.addScreen(mod.getMetadata().getId(), screen);
 
         }
+
+        TickUtil.init();
 
     }
 

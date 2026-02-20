@@ -145,15 +145,18 @@ public class Slider extends SliderWidget {
 
     public void updateText(String text) {
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
-
-        drawContext.drawCenteredTextWithShadow(mc.textRenderer, text, getX() + width / 2, getY() + (height - 8) / 2, textColor);
-
     }
 
     public double getValue() {
 
         return this.value;
 
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+        updateMessage();
+        applyValue();
     }
 
     public void hide() {

@@ -1,5 +1,6 @@
 package me.kitty.radon;
 
+import me.kitty.radon.Screens.Settings;
 import me.kitty.radon.client.Sound;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.text.Style;
@@ -13,7 +14,7 @@ public class Radon implements ModInitializer {
     public static float volume = 0.5f;
     public static float scaleMultiplier = 0;
     public static String inputText = "";
-    public static boolean defaultFont = false;
+    public static final Settings settings = new Settings();
 
     //? if > 1.21.8 {
     public static Style fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of("radon", "default")));

@@ -97,7 +97,7 @@ public class ModMenu extends Screen {
                 "Settings",
                 List.of(),
                 0,
-                (button) -> mc.execute(() -> mc.setScreen(new SettingsScreen("Settings", this))),
+                (button) -> mc.execute(() -> mc.setScreen(Radon.settings.setParent(this))),
                 MENU_CLICK
         );
 

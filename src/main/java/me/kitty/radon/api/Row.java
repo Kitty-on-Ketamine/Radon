@@ -1,6 +1,7 @@
 package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.Widgets.Box;
 import me.kitty.radon.client.IScreenMixin;
 import net.minecraft.client.MinecraftClient;
@@ -14,16 +15,25 @@ public abstract class Row {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private final String description;
     private final List<String> tooltipTexts;
-    protected final long timestamp;
-    private final Box box;
-    private final TextWidget label;
+    protected boolean initialized = false;
+    private Box box;
+    private TextWidget label;
+    protected final ConfigScreen screen;
+    protected int height;
 
     Row(String description, List<String> tooltip, ConfigScreen screen) {
         this.description = description;
         this.tooltipTexts = tooltip;
-        this.timestamp = System.currentTimeMillis();
+        this.screen = screen;
+        height = screen.getHeightOffset();
+    }
 
-        int height = screen.getHeightOffset();
+    void resetHeight() {
+        height = screen.getHeightOffset();
+    }
+
+    void reRender() {
+        TickUtil.runNextTick(() -> initialized = true);
 
         box = new Box(
                 10,
@@ -32,7 +42,7 @@ public abstract class Row {
                 height + 16,
                 0x33000000,
                 0xffffffff,
-                tooltip
+                tooltipTexts
         );
 
         label = new TextWidget(
@@ -63,5 +73,9 @@ public abstract class Row {
     }
     public List<String> getTooltipTexts() {
         return tooltipTexts;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
     }
 }
