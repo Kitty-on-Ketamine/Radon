@@ -31,7 +31,10 @@ public class Settings extends ConfigScreen {
             MinecraftClient.getInstance().reloadResources();
         });
         ButtonRow instantSave = buttonRow("Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
-        instantSave.subscribe(i -> Radon.instantSave = (boolean) i);
+        instantSave.subscribe(i -> {
+            Radon.instantSave = (boolean) i;
+            MinecraftClient.getInstance().reloadResources();
+        });
         volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
         font.onInit(() -> {
             //? if >1.21.8 {

@@ -47,18 +47,18 @@ public class ModMenu extends Screen {
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
             ModContainer mod = container.getProvider();
-            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(16);
+            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(19);
 
             if (iconPathOpt.isPresent()) {
                 Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
                 context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
                     iconId,
-                    50 + offset - 20,
-                    50 - 4,
+                    50 + offset - 22,
+                    50 - 6,
                     0, 0,
-                    18, 18,
-                    16, 16
+                    19, 19,
+                    19, 19
                 );
             }
 
@@ -118,7 +118,7 @@ public class ModMenu extends Screen {
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
 
             ModContainer mod = container.getProvider();
-            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(18);
+            Optional<String> iconPathOpt = mod.getMetadata().getIconPath(19);
 
             Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
 
