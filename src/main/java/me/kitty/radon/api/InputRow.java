@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 public class InputRow extends Row {
     private String placeholder;
     private String value;
+    private String lastValue;
     private Input input;
     private final List<Consumer<String>> consumers = new ArrayList<>();
     private final int limit;
@@ -30,6 +31,7 @@ public class InputRow extends Row {
             if (config == null) return;
             config.addProperty(description, v);
             screen.getSaver().save(config);
+            lastValue = v;
         });
         reData();
     }
@@ -71,12 +73,19 @@ public class InputRow extends Row {
         TickUtil.runNextTick(this::reData);
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        lastValue = value;
+    }
+
     public String getValue() {
         return value;
     }
 
     @Override
     public void save() {
+        if (lastValue == value) return;
         for (Consumer<String> consumer : consumers) {
             consumer.accept(this.value);
         }

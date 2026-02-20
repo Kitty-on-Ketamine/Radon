@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 
 public class ButtonRow extends Row {
     private Object value;
+    private Object lastValue;
     private Button button;
     private final List<Consumer<Object>> consumers = new ArrayList<>();
 
@@ -28,6 +29,7 @@ public class ButtonRow extends Row {
             if (config == null) return;
             config.addProperty(description, v.toString());
             screen.getSaver().save(config);
+            lastValue = v;
         });
         reData();
     }
@@ -58,6 +60,7 @@ public class ButtonRow extends Row {
 
     @Override
     public void save() {
+        if (lastValue == value) return;
         for (Consumer<Object> consumer : consumers) {
             consumer.accept(this.value);
         }
@@ -87,6 +90,12 @@ public class ButtonRow extends Row {
         }
 
         init();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        lastValue = value;
     }
 
     @Override

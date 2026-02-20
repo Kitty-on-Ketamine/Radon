@@ -18,6 +18,7 @@ public class SliderRow extends Row {
     private final int min;
     private final int max;
     private long value;
+    private long lastValue;
     private Slider slider;
     private final List<Consumer<Long>> consumers = new ArrayList<>();
 
@@ -32,6 +33,7 @@ public class SliderRow extends Row {
             if (config == null) return;
             config.addProperty(description, v);
             screen.getSaver().save(config);
+            lastValue = v;
         });
         reData();
     }
@@ -58,7 +60,14 @@ public class SliderRow extends Row {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        lastValue = value;
+    }
+
+    @Override
     public void save() {
+        if (lastValue == value) return;
         for (Consumer<Long> consumer : consumers) {
             consumer.accept(this.value);
         }
