@@ -1,16 +1,20 @@
 package me.kitty.radon.Widgets;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
 public class StaticBox implements Drawable, Element, Selectable {
+
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "widgets/background");
 
     private final int x1;
     private final int y1;
@@ -35,6 +39,30 @@ public class StaticBox implements Drawable, Element, Selectable {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+
+        int w = x2 - x1;
+        int h = y2 - y1;
+
+        for (int x = 0; x < w; x += 32) {
+
+            for (int y = 0; y < h; y += 32) {
+
+                context.drawTexture(
+                        RenderPipelines.GUI_TEXTURED,
+                        BACKGROUND_TEXTURE,
+                        x1 + x,
+                        y1 + y,
+                        0,
+                        0,
+                        32,
+                        32,
+                        32,
+                        32
+                );
+
+            }
+
+        }
 
         context.fill(
                 x1 - 2,

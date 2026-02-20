@@ -93,8 +93,8 @@ public class SliderRow extends Row {
                         }
                     }
                 },
-                Sound.MENU_CLICK,
                 Sound.MENU_SLIDE,
+                Sound.MENU_CLICK,
                 (initialValue - min) / (double)(max - min)
         );
 

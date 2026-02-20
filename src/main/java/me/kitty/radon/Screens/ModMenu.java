@@ -70,7 +70,7 @@ public class ModMenu extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
 
         Button backButton = new Button(
                 10,

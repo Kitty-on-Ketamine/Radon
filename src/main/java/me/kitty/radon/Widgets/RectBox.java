@@ -71,14 +71,14 @@ public class RectBox implements Drawable, Element, Selectable {
         if (this.hidden) return;
         if (!this.visible) return;
 
-        if (on && System.currentTimeMillis() - now.get(this) >= 5) {
+        if (on && System.currentTimeMillis() - now.get(this) >= 5 && !isStatic) {
 
             fade = Math.min(fade + 1, 25);
             now.put(this, System.currentTimeMillis());
 
         }
 
-        if (!on && System.currentTimeMillis() - now.get(this) >= 5) {
+        if (!on && System.currentTimeMillis() - now.get(this) >= 5 && !isStatic) {
 
             fade = Math.max(fade - 1, 0);
             now.put(this, System.currentTimeMillis());
@@ -130,6 +130,8 @@ public class RectBox implements Drawable, Element, Selectable {
         int alpha = Math.min(fade * 10, 255);
 
         int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
+
+        if (isStatic) outlineColor = outline;
 
         // TOP
         if (side1) {
@@ -200,7 +202,7 @@ public class RectBox implements Drawable, Element, Selectable {
                     x1 - 3,
                     y1 - 2,
                     x1 - 2,
-                    y2 + 2,
+                    y2 + 3,
                     outlineColor
             );
 

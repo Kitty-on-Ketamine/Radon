@@ -30,6 +30,9 @@ public class ConceptScreen extends Screen {
     @Override
     public void init() {
 
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+
         addDrawableChild(new Button(
                 width - 50 - 10,
                 5,
@@ -53,9 +56,6 @@ public class ConceptScreen extends Screen {
                 (button) -> mc.execute(() -> mc.setScreen(this.origin)),
                 Sound.MENU_CLICK
         ));
-
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
 
         addDrawableChild(new Input(
                 10,
@@ -112,7 +112,7 @@ public class ConceptScreen extends Screen {
 
         this.addDrawableChild(new RectBox(
                 this.width / 2 - 30,
-                37,
+                34,
                 this.width / 2 + 30,
                 55,
                 false,
@@ -127,7 +127,7 @@ public class ConceptScreen extends Screen {
 
         this.addDrawableChild(new TextWidget(
                 this.width / 2 - textRenderer.getWidth("teszt") / 2,
-                35,
+                34 + textRenderer.fontHeight / 3 * 2,
                 60,
                 textRenderer.fontHeight,
                 Text.literal("teszt").setStyle(Radon.fontStyle),

@@ -208,8 +208,8 @@ public class WidgetDrawer {
                     slider1.updateText(String.valueOf(value));
 
                 },
-                Sound.MENU_CLICK,
                 Sound.MENU_SLIDE,
+                Sound.MENU_CLICK,
                 (initialValue - min) / (double)(max - min)
         );
         sliders.put(uuid, slider);

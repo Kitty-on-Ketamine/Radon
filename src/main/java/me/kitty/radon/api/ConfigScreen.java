@@ -32,6 +32,10 @@ public abstract class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
+
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+
         addDrawableChild(new Button(
                 width - 50 - 10,
                 5,
@@ -95,8 +99,6 @@ public abstract class ConfigScreen extends Screen {
             ));
         }
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
         for (Row row : rows) {
             row.reRender();
         }
