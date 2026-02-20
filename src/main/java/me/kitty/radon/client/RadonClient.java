@@ -1,10 +1,8 @@
 package me.kitty.radon.client;
 
-import me.kitty.radon.Radon;
 import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.api.ConfigScreen;
 import me.kitty.radon.Screens.ModMenu;
-import me.kitty.radon.api.Row;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -47,13 +45,14 @@ public class RadonClient implements ClientModInitializer {
 
             }
 
-            System.out.println(Radon.volume);
+            //System.out.println(Radon.volume);
         });
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
             ConfigScreen screen = container.getEntrypoint();
             ModContainer mod = container.getProvider();
             modContainers.put(screen, mod);
+            screen.initSaver();
             ModMenuIntegration.addScreen(mod.getMetadata().getId(), screen);
 
         }

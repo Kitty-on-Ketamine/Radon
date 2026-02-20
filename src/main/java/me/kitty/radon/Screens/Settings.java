@@ -30,11 +30,16 @@ public class Settings extends ConfigScreen {
              *///? }
             MinecraftClient.getInstance().reloadResources();
         });
-        Radon.volume = (float) volume.getValue() / 100;
-        //? if >1.21.8 {
-        Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default")));
-        //? } else {
-        /*Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default"));
-         *///? }
+        ButtonRow instantSave = buttonRow("Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
+        instantSave.subscribe(i -> Radon.instantSave = (boolean) i);
+        volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
+        font.onInit(() -> {
+            //? if >1.21.8 {
+            Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default")));
+            //? } else {
+            /*Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default"));
+             *///? }
+        });
+        instantSave.onInit(() -> Radon.instantSave = (boolean) instantSave.getValue());
     }
 }

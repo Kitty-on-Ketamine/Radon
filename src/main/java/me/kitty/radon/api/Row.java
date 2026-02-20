@@ -9,37 +9,33 @@ import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Row {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
-    private final String description;
-    private final List<String> tooltipTexts;
+    protected final String description;
+    protected final List<String> tooltipTexts;
     protected boolean initialized = false;
     private Box box;
     private TextWidget label;
     protected final ConfigScreen screen;
-    protected int height;
+    private final List<Runnable> runnables = new ArrayList<>();
 
     Row(String description, List<String> tooltip, ConfigScreen screen) {
         this.description = description;
         this.tooltipTexts = tooltip;
         this.screen = screen;
-        height = screen.getHeightOffset();
-    }
-
-    void resetHeight() {
-        height = screen.getHeightOffset();
     }
 
     void reRender() {
-        TickUtil.runNextTick(() -> initialized = true);
+        TickUtil.runNextTick(this::init);
 
         box = new Box(
                 10,
-                height,
+                0,
                 screen.width - 10,
-                height + 16,
+                16,
                 0x33000000,
                 0xffffffff,
                 tooltipTexts
@@ -47,7 +43,7 @@ public abstract class Row {
 
         label = new TextWidget(
                 10,
-                height + 1,
+                1,
                 200,
                 16,
                 Text.literal(description).setStyle(Radon.fontStyle),
@@ -67,6 +63,7 @@ public abstract class Row {
     }
 
     public abstract Widget getWidget();
+    public abstract void save();
 
     public String getDescription() {
         return description;
@@ -77,5 +74,18 @@ public abstract class Row {
 
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
+    }
+    public void onInit(Runnable runnable) {
+        runnables.add(runnable);
+    }
+    protected void init() {
+        if (!initialized) {
+            initialized = true;
+            TickUtil.runNextTick(() -> {
+                for (Runnable runnable : runnables) {
+                    runnable.run();
+                }
+            });
+        }
     }
 }

@@ -25,25 +25,13 @@ public class InputRow extends Row {
         super(description, tooltip, screen);
         this.placeholder = placeholder;
         this.limit = limit;
-
-        JsonObject cfg = screen.getSaver().load();
-        if (cfg != null) {
-            JsonElement val = cfg.get(description);
-            if (val == null) {
-                cfg.addProperty(description, "");
-            }
-            String value = cfg.get(description).getAsString();
-            if (!value.isEmpty() && value.length() <= limit) {
-                TickUtil.runNextTick(() -> setValue(value, false));
-            }
-        }
-
         subscribe(v -> {
             JsonObject config = screen.getSaver().load();
             if (config == null) return;
             config.addProperty(description, v);
             screen.getSaver().save(config);
         });
+        reData();
     }
 
     public String getPlaceholder() {
@@ -62,14 +50,16 @@ public class InputRow extends Row {
 
         input = new Input(
                 screen.width - 10 - 75,
-                height,
+                0,
                 75,
                 limit,
                 placeholder,
                 i -> {
                     this.value = i.getText();
-                    for (Consumer<String> consumer : consumers) {
-                        consumer.accept(this.value);
+                    if (Radon.instantSave) {
+                        for (Consumer<String> consumer : consumers) {
+                            consumer.accept(this.value);
+                        }
                     }
                 },
                 Sound.MENU_CLICK,
@@ -78,10 +68,18 @@ public class InputRow extends Row {
         );
 
         ((IScreenMixin) screen).addDrawableChildPublic(input);
+        TickUtil.runNextTick(this::reData);
     }
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public void save() {
+        for (Consumer<String> consumer : consumers) {
+            consumer.accept(this.value);
+        }
     }
 
     private void setValue(String value, Boolean subscribe) {
@@ -93,6 +91,22 @@ public class InputRow extends Row {
                 consumer.accept(this.value);
             }
         }
+    }
+
+    protected void reData() {
+        JsonObject cfg = screen.getSaver().load();
+        if (cfg != null) {
+            JsonElement val = cfg.get(description);
+            if (val == null) {
+                cfg.addProperty(description, "");
+            }
+            String value = cfg.get(description).getAsString();
+            if (!value.isEmpty() && value.length() <= limit) {
+                setValue(value, false);
+            }
+        }
+
+        init();
     }
 
     public void setValue(String value) {

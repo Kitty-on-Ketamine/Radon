@@ -2,6 +2,7 @@ package me.kitty.radon.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.kitty.radon.Radon;
 import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.Widgets.Slider;
 import me.kitty.radon.client.IScreenMixin;
@@ -26,24 +27,13 @@ public class SliderRow extends Row {
         this.min = min;
         this.max = max;
 
-        JsonObject cfg = screen.getSaver().load();
-        if (cfg != null) {
-            JsonElement val = cfg.get(description);
-            if (val == null) {
-                cfg.addProperty(description, initialValue);
-            }
-            long value = cfg.get(description).getAsLong();
-            if (value >= min && value <= max) {
-                TickUtil.runNextTick(() -> setValue(value, false));
-            }
-        }
-
         subscribe(v -> {
             JsonObject config = screen.getSaver().load();
             if (config == null) return;
             config.addProperty(description, v);
             screen.getSaver().save(config);
         });
+        reData();
     }
 
     public int getInitialValue() {
@@ -66,6 +56,14 @@ public class SliderRow extends Row {
             }
         }
     }
+
+    @Override
+    public void save() {
+        for (Consumer<Long> consumer : consumers) {
+            consumer.accept(this.value);
+        }
+    }
+
     public void setValue(long value) {
         setValue(value, true);
     }
@@ -82,15 +80,17 @@ public class SliderRow extends Row {
 
         slider = new Slider(
                 screen.width - 10 - 75,
-                height,
+                0,
                 75,
                 16,
                 String.valueOf(initialValue),
                 s -> {
                     this.value = Math.round((s.getValue() * 100) / 100 * (max - min) + min);
                     s.updateText(String.valueOf(this.value));
-                    for (Consumer<Long> consumer : consumers) {
-                        consumer.accept(this.value);
+                    if (Radon.instantSave) {
+                        for (Consumer<Long> consumer : consumers) {
+                            consumer.accept(this.value);
+                        }
                     }
                 },
                 Sound.MENU_CLICK,
@@ -99,10 +99,27 @@ public class SliderRow extends Row {
         );
 
         ((IScreenMixin) screen).addDrawableChildPublic(slider);
+        TickUtil.runNextTick(this::reData);
     }
 
     @Override
     public Widget getWidget() {
         return slider;
+    }
+
+    protected void reData() {
+        JsonObject cfg = screen.getSaver().load();
+        if (cfg != null) {
+            JsonElement val = cfg.get(description);
+            if (val == null) {
+                cfg.addProperty(description, initialValue);
+            }
+            long value = cfg.get(description).getAsLong();
+            if (value >= min && value <= max) {
+                setValue(value, false);
+            }
+        }
+
+        init();
     }
 }

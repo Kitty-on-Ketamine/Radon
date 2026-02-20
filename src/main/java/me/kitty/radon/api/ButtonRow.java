@@ -2,6 +2,7 @@ package me.kitty.radon.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.kitty.radon.Radon;
 import me.kitty.radon.Utils.DataUtils;
 import me.kitty.radon.Utils.TickUtil;
 import me.kitty.radon.Widgets.Button;
@@ -22,34 +23,13 @@ public class ButtonRow extends Row {
         super(description, tooltip, screen);
         this.value = value;
 
-        JsonObject cfg = screen.getSaver().load();
-        if (cfg != null) {
-            JsonElement val = cfg.get(description);
-            if (value instanceof Boolean) {
-                if (val == null) {
-                    cfg.addProperty(description, ((Boolean) value));
-                }
-                boolean v = cfg.get(description).getAsBoolean();
-                TickUtil.runNextTick(() -> setValue(v, false));
-            } else if (value instanceof Enum<?> enumOption) {
-                if (val == null) {
-                    cfg.addProperty(description, "");
-                }
-                String v = cfg.get(description).getAsString();
-                if (!v.isEmpty()) {
-                    Class<Enum> enumClass = (Class<Enum>) enumOption.getClass();
-                    Enum<?> e = Enum.valueOf(enumClass, v);
-                    TickUtil.runNextTick(() -> setValue(e));
-                }
-            }
-        }
-
         subscribe(v -> {
             JsonObject config = screen.getSaver().load();
             if (config == null) return;
             config.addProperty(description, v.toString());
             screen.getSaver().save(config);
         });
+        reData();
     }
     public Object getValue() {
         return value;
@@ -77,13 +57,46 @@ public class ButtonRow extends Row {
     }
 
     @Override
+    public void save() {
+        for (Consumer<Object> consumer : consumers) {
+            consumer.accept(this.value);
+        }
+    }
+
+    protected void reData() {
+        JsonObject cfg = screen.getSaver().load();
+        if (cfg != null) {
+            JsonElement val = cfg.get(description);
+            if (value instanceof Boolean) {
+                if (val == null) {
+                    cfg.addProperty(description, ((Boolean) value));
+                }
+                boolean v = cfg.get(description).getAsBoolean();
+                setValue(v, false);
+            } else if (value instanceof Enum<?> enumOption) {
+                if (val == null) {
+                    cfg.addProperty(description, "");
+                }
+                String v = cfg.get(description).getAsString();
+                if (!v.isEmpty()) {
+                    Class<Enum> enumClass = (Class<Enum>) enumOption.getClass();
+                    Enum<?> e = Enum.valueOf(enumClass, v);
+                    setValue(e, false);
+                }
+            }
+        }
+
+        init();
+    }
+
+    @Override
     void reRender() {
         super.reRender();
 
         if (this.value instanceof Boolean) {
             button = new Button(
                     screen.width - 10 - 75,
-                    height,
+                    0,
                     75,
                     16,
                     String.valueOf(this.value),
@@ -94,8 +107,10 @@ public class ButtonRow extends Row {
                         this.value = !val;
                         b.updateText(String.valueOf(!val));
                         b.updateColor(!val ? 0xff55ff55 : 0xffff5555);
-                        for (Consumer<Object> consumer : consumers) {
-                            consumer.accept(this.value);
+                        if (Radon.instantSave) {
+                            for (Consumer<Object> consumer : consumers) {
+                                consumer.accept(this.value);
+                            }
                         }
                     },
                     Sound.MENU_CLICK
@@ -103,7 +118,7 @@ public class ButtonRow extends Row {
         } else if (this.value instanceof Enum<?> enumOption) {
             button = new Button(
                     screen.width - 10 - 75,
-                    height,
+                    0,
                     75,
                     16,
                     String.valueOf(enumOption),
@@ -112,8 +127,10 @@ public class ButtonRow extends Row {
                     b -> {
                         this.value = DataUtils.next((Enum<?>) this.value);
                         b.updateText(String.valueOf(this.value));
-                        for (Consumer<Object> consumer : consumers) {
-                            consumer.accept(this.value);
+                        if (Radon.instantSave) {
+                            for (Consumer<Object> consumer : consumers) {
+                                consumer.accept(this.value);
+                            }
                         }
                     },
                     Sound.MENU_CLICK
@@ -121,6 +138,7 @@ public class ButtonRow extends Row {
         } else throw new IllegalArgumentException();
 
         ((IScreenMixin) screen).addDrawableChildPublic(button);
+        TickUtil.runNextTick(this::reData);
     }
 
     @Override

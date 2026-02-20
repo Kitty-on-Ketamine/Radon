@@ -14,13 +14,14 @@ public class Radon implements ModInitializer {
     public static float volume = 0.5f;
     public static float scaleMultiplier = 0;
     public static String inputText = "";
-    public static final Settings settings = new Settings();
+    public static final Settings settings = (Settings) new Settings().initSaver();
 
     //? if > 1.21.8 {
     public static Style fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of("radon", "default")));
     //? } else {
     /*public static Style fontStyle = Style.EMPTY.withFont(Identifier.of("radon", "default"));
-    *///? }
+     *///? }
+    public static boolean instantSave = true;
 
     @Override
     public void onInitialize() {
