@@ -34,7 +34,7 @@ public abstract class ConfigScreen extends Screen {
     protected void init() {
 
         addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, height - 28, width + 2, height + 2, 0x33000000,  0xffffffff, List.of()));
 
         addDrawableChild(new Button(
                 width - 50 - 10,
@@ -71,7 +71,7 @@ public abstract class ConfigScreen extends Screen {
 
         addDrawableChild(new Input(
                 10,
-                height - 16 - 10,
+                height - 16 - 7,
                 75,
                 15,
                 "Search...",
@@ -84,7 +84,7 @@ public abstract class ConfigScreen extends Screen {
         if (!Radon.instantSave) {
             addDrawableChild(new Button(
                     width - 10 - 75,
-                    height - 16 - 10,
+                    height - 16 - 7,
                     75,
                     16,
                     "Save",

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class StaticBox implements Drawable, Element, Selectable {
 
-    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "widgets/background");
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "textures/gui/sprites/widgets/background.png");
 
     private final int x1;
     private final int y1;
@@ -64,49 +64,21 @@ public class StaticBox implements Drawable, Element, Selectable {
 
         }
 
-        context.fill(
-                x1 - 2,
-                y1 - 2,
-                x2 + 2,
-                y2 + 2,
-                color
-        );
+        context.fill(x1, y1, x2, y2, color);
 
-        // TOP
-        context.fill(
-                x1 - 4,
-                y1 - 4,
-                x2 + 4,
-                y1 - 2,
-                outline
-        );
+        int b = 2;
 
-        // BOTTOM
-        context.fill(
-                x1 - 4,
-                y2 + 4,
-                x2 + 4,
-                y2 + 2,
-                outline
-        );
+        // Top
+        context.fill(x1 - b, y1 - b, x2 + b, y1, outline);
 
-        // LEFT
-        context.fill(
-                x1 - 4,
-                y1 - 4,
-                x1 - 2,
-                y2 + 4,
-                outline
-        );
+        // Bottom
+        context.fill(x1 - b, y2, x2 + b, y2 + b, outline);
 
-        // RIGHT
-        context.fill(
-                x2 + 4,
-                y1 - 4,
-                x2 + 2,
-                y2 + 2,
-                outline
-        );
+        // Left
+        context.fill(x1 - b, y1, x1, y2, outline);
+
+        // Right
+        context.fill(x2, y1, x2 + b, y2, outline);
 
         if (tooltip != null && !tooltip.isEmpty()) {
 

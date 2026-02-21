@@ -19,7 +19,7 @@ repositories {
 2. Add Radon to the dependencies of your mod:
 ```groovy
 dependencies {
-    modImplementation "modrinth:radon-lib:${project.radon_version}"  
+    modImplementation "maven.modrinth:radon-lib:${project.radon_version}"  
 }
 ```
 3. Define the version of Radon in gradle.properties:

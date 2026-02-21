@@ -5,7 +5,6 @@ import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.text.Text;
 
 import java.awt.*;
