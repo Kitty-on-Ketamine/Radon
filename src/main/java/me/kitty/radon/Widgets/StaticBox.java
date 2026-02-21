@@ -1,7 +1,7 @@
 package me.kitty.radon.Widgets;
 
+import me.kitty.radon.client.Draw;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class StaticBox implements Drawable, Element, Selectable {
 
-    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "widgets/background");
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "textures/gui/sprites/widgets/background.png");
 
     private final int x1;
     private final int y1;
@@ -47,73 +47,38 @@ public class StaticBox implements Drawable, Element, Selectable {
 
             for (int y = 0; y < h; y += 32) {
 
-                int drawWidth = Math.min(32, w - x);
-                int drawHeight = Math.min(32, h - y);
-
-                context.getMatrices().pushMatrix();
-
-                context.drawGuiTexture(
-                        RenderPipelines.GUI_TEXTURED,
+                Draw.draw(
+                        context,
                         BACKGROUND_TEXTURE,
-                        32,
-                        32,
-                        0,
-                        0,
                         x1 + x,
-                        y1 + 2 + y,
-                        drawWidth,
-                        drawHeight
+                        y1 + y,
+                        0,
+                        0,
+                        32,
+                        32,
+                        32,
+                        32
                 );
-
-                context.getMatrices().popMatrix();
 
             }
 
         }
 
-        context.fill(
-                x1 - 2,
-                y1 - 2,
-                x2 + 2,
-                y2 + 2,
-                color
-        );
+        context.fill(x1, y1, x2, y2, color);
 
-        // TOP
-        context.fill(
-                x1 - 4,
-                y1 - 4,
-                x2 + 4,
-                y1 - 2,
-                outline
-        );
+        int b = 2;
 
-        // BOTTOM
-        context.fill(
-                x1 - 4,
-                y2 + 4,
-                x2 + 4,
-                y2 + 2,
-                outline
-        );
+        // Top
+        context.fill(x1 - b, y1 - b, x2 + b, y1, outline);
 
-        // LEFT
-        context.fill(
-                x1 - 4,
-                y1 - 4,
-                x1 - 2,
-                y2 + 4,
-                outline
-        );
+        // Bottom
+        context.fill(x1 - b, y2, x2 + b, y2 + b, outline);
 
-        // RIGHT
-        context.fill(
-                x2 + 4,
-                y1 - 4,
-                x2 + 2,
-                y2 + 2,
-                outline
-        );
+        // Left
+        context.fill(x1 - b, y1, x1, y2, outline);
+
+        // Right
+        context.fill(x2, y1, x2 + b, y2, outline);
 
         if (tooltip != null && !tooltip.isEmpty()) {
 

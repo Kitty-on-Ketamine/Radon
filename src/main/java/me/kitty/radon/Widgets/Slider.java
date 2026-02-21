@@ -1,18 +1,14 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.client.Draw;
+import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
-//? if >1.21.4 {
-import net.minecraft.client.gl.RenderPipelines;
-//? } else {
-/*import net.minecraft.client.render.RenderLayer;
- *///? }
 //? if >1.21.8 {
-import net.minecraft.client.gui.Click;
-//? }
+/*import net.minecraft.client.gui.Click;
+*///? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -75,18 +71,11 @@ public class Slider extends SliderWidget {
 
         }
 
-        //?if >1.21.4 {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), width, height);
-
+        Draw.drawGui(context, texture, getX(), getY(), width, height);
         int handleWidth = 9;
         int handleX = getX() + (int)(this.value * (width - handleWidth));
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, handleTexture, handleX, getY(), handleWidth, height);
-
+        Draw.drawGui(context, handleTexture, handleX, getY(), handleWidth, height);
         context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
-
-        //? } else {
-        /*context.drawGuiTexture(RenderLayer::getGuiTextured, texture, getX(), getY(), width, height);
-         *///? }
 
     }
 
@@ -100,13 +89,7 @@ public class Slider extends SliderWidget {
 
         if (System.currentTimeMillis() - this.now > 45) {
 
-        mc.getSoundManager().play(PositionedSoundInstance.
-                    //? if >1.21.8 {
-                    ui
-                     //? } else {
-                            /*ambient
-                    *///? }
-        (slideSound, 1.0f, 5.0f * Radon.volume));
+            Sound.play(slideSound);
             this.now = System.currentTimeMillis();
 
         }
@@ -116,32 +99,26 @@ public class Slider extends SliderWidget {
     }
 
     //?if >1.21.8 {
-    @Override
+    /*@Override
     public void onClick(Click click, boolean doubled) {
-
-        mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 1.0f, 5.0f * Radon.volume));
-
+        Sound.play(clickSound);
     }
 
     @Override
     public void onRelease(Click click) {
-
-        mc.getSoundManager().play(PositionedSoundInstance.ui(clickSound, 0.8f, 5.0f * Radon.volume));
-
+        Sound.play(clickSound);
     }
-     //? } else {
-    /*@Override
+     *///? } else {
+    @Override
     public void onClick(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
-        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 1.0f, 5.0f * Radon.volume));
+        Sound.play(clickSound);
     }
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
-        super.onRelease(mouseX, mouseY);
-        mc.getSoundManager().play(PositionedSoundInstance.ambient(clickSound, 0.8f, 5.0f * Radon.volume));
+        Sound.play(clickSound);
     }
-    *///? }
+    //? }
 
     public void updateText(String text) {
         this.text = Text.literal(text).setStyle(Radon.fontStyle);

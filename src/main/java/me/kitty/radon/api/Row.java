@@ -44,7 +44,7 @@ public abstract class Row {
         label = new TextWidget(
                 10,
                 1,
-                200,
+                mc.textRenderer.getWidth(description),
                 16,
                 Text.literal(description).setStyle(Radon.fontStyle),
                 mc.textRenderer

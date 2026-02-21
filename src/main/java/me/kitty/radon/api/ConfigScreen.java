@@ -33,8 +33,8 @@ public abstract class ConfigScreen extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, height - 28, width + 2, height + 2, 0x33000000,  0xffffffff, List.of()));
 
         addDrawableChild(new Button(
                 width - 50 - 10,
@@ -71,7 +71,7 @@ public abstract class ConfigScreen extends Screen {
 
         addDrawableChild(new Input(
                 10,
-                height - 16 - 10,
+                height - 16 - 7,
                 75,
                 15,
                 "Search...",
@@ -84,7 +84,7 @@ public abstract class ConfigScreen extends Screen {
         if (!Radon.instantSave) {
             addDrawableChild(new Button(
                     width - 10 - 75,
-                    height - 16 - 10,
+                    height - 16 - 7,
                     75,
                     16,
                     "Save",
@@ -122,6 +122,10 @@ public abstract class ConfigScreen extends Screen {
     protected abstract void radon();
     public ConfigScreen setParent(Screen parent) {
         this.parent = parent;
+        return this;
+    }
+    public ConfigScreen fromTop() {
+        scrollOffset = 0;
         return this;
     }
 
@@ -170,7 +174,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         ButtonRow row = new ButtonRow(description, tooltipTexts, option, this);
-        heightOffset += 25;
+        heightOffset += 20;
         rows.add(row);
         return row;
     }
@@ -178,7 +182,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         SliderRow row = new SliderRow(description, tooltipTexts, initialValue, min, max, this);
-        heightOffset += 25;
+        heightOffset += 20;
         rows.add(row);
         return row;
     }
@@ -186,7 +190,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         InputRow row = new InputRow(description, tooltipTexts, placeholder, limit, this);
-        heightOffset += 25;
+        heightOffset += 20;
         rows.add(row);
         return row;
     }
@@ -195,9 +199,9 @@ public abstract class ConfigScreen extends Screen {
         heightOffset = 75 - scrollOffset;
         for (Row row : this.rows) {
             int y = heightOffset;
-            heightOffset += 25;
+            heightOffset += 20;
             if (y < 75 || y > height - 60 || !rows.contains(row)) {
-                if (!rows.contains(row)) heightOffset -= 25;
+                if (!rows.contains(row)) heightOffset -= 20;
                 row.getBox().y1 = -100;
                 row.getBox().y2 = -100;
                 row.getLabel().setY(-100);
