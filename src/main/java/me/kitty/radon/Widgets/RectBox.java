@@ -38,6 +38,7 @@ public class RectBox implements Drawable, Element, Selectable {
 
     private boolean on = false;
     private int fade = 0;
+    private int backgroundFade = 0;
 
     public RectBox(int x1, int y1, int x2, int y2, boolean side1, boolean side2, boolean side3, boolean side4, int color, int outline, List<String> tooltip, boolean isStatic, Consumer<RectBox> onClick) {
 
@@ -109,19 +110,27 @@ public class RectBox implements Drawable, Element, Selectable {
         if (this.hidden) return;
         if (!this.visible) return;
 
-        if (on && System.currentTimeMillis() - now.get(this) >= 5 && !isStatic) {
+        if (on && System.currentTimeMillis() - now.get(this) >= 5) {
 
-            fade = Math.min(fade + 1, 25);
+            fade = Math.min(fade + 3, 25);
+            backgroundFade = Math.min(backgroundFade + 3, 25);
             now.put(this, System.currentTimeMillis());
 
         }
 
-        if (!on && System.currentTimeMillis() - now.get(this) >= 5 && !isStatic) {
+        if (!on && System.currentTimeMillis() - now.get(this) >= 5) {
 
-            fade = Math.max(fade - 1, 0);
+            fade = Math.max(fade - 3, 0);
+            backgroundFade = Math.max(backgroundFade - 3, 0);
             now.put(this, System.currentTimeMillis());
 
         }
+
+        int alpha = Math.min(fade * 10, 255);
+        int backgroundAlpha = Math.min(backgroundFade * 5, 80);
+
+        int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
+        int backgroundColor = (backgroundAlpha << 24) | (color & 0x00000000);
 
         if (isStatic) on = true;
 
@@ -133,14 +142,6 @@ public class RectBox implements Drawable, Element, Selectable {
                 on = true;
 
             }
-
-            context.fill(
-                    x1 - 2,
-                    y1 - 2,
-                    x2 + 2,
-                    y2 + 2,
-                    color
-            );
 
             if (tooltip != null && !tooltip.isEmpty()) {
 
@@ -159,11 +160,15 @@ public class RectBox implements Drawable, Element, Selectable {
 
         }
 
-        int alpha = Math.min(fade * 10, 255);
-
-        int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
-
         if (isStatic) outlineColor = outline;
+
+        context.fill(
+                x1 - 2,
+                y1 - 2,
+                x2 + 2,
+                y2 + 2,
+                backgroundColor
+        );
 
         // TOP
         if (side1) {

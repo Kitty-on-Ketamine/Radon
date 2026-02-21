@@ -90,6 +90,24 @@ public class StaticBox implements Drawable, Element, Selectable {
 
         int b = 2;
 
+        // Shadow
+
+        // Bottom
+        context.fill(x1 - b + 2, y2 + 2, x2 + b + 2, y2 + b + 2, 0x55000000);
+
+        // Bottom
+        context.fill(x1 - b + 2, y2 + 2, x2 + b + 2, y2 + b + 2, 0x55000000);
+
+        // Left
+        context.fill(x1 - b + 2, y1 + 2, x1 + 2, y2 + 2, 0x55000000);
+
+        // Right
+        context.fill(x2 + 2, y1 + 2, x2 + b + 2, y2 + 2, 0x55000000);
+
+
+
+        // Outline
+
         // Top
         context.fill(x1 - b, y1 - b, x2 + b, y1, outline);
 

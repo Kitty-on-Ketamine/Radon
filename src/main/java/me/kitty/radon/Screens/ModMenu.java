@@ -42,6 +42,7 @@ public class ModMenu extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+
         super.render(context, mouseX, mouseY, deltaTicks);
 
         int offset = 0;
@@ -93,6 +94,7 @@ public class ModMenu extends Screen {
     @Override
     protected void init() {
 
+        addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
         addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         Button backButton = new Button(

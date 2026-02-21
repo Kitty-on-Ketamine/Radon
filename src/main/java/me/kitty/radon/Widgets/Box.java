@@ -1,7 +1,6 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
-import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
@@ -9,7 +8,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +32,7 @@ public class Box implements Drawable, Element, Selectable {
 
     private boolean on = false;
     private int fade = 0;
+    private int backgroundFade = 0;
 
     public Box(int x1, int y1, int x2, int y2, int color, int outline, List<String> tooltip) {
 
@@ -65,17 +64,25 @@ public class Box implements Drawable, Element, Selectable {
 
         if (on && System.currentTimeMillis() - now.get(this) >= 5) {
 
-            fade = Math.min(fade + 1, 25);
+            fade = Math.min(fade + 3, 25);
+            backgroundFade = Math.min(backgroundFade + 3, 25);
             now.put(this, System.currentTimeMillis());
 
         }
 
         if (!on && System.currentTimeMillis() - now.get(this) >= 5) {
 
-            fade = Math.max(fade - 1, 0);
+            fade = Math.max(fade - 3, 0);
+            backgroundFade = Math.max(backgroundFade - 3, 0);
             now.put(this, System.currentTimeMillis());
 
         }
+
+        int alpha = Math.min(fade * 10, 255);
+        int backgroundAlpha = Math.min(backgroundFade * 5, 80);
+
+        int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
+        int backgroundColor = (backgroundAlpha << 24) | (color & 0x88000000);
 
         if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
 
@@ -85,14 +92,6 @@ public class Box implements Drawable, Element, Selectable {
                 on = true;
 
             }
-
-            context.fill(
-                    x1 - 2,
-                    y1 - 2,
-                    x2 + 2,
-                    y2 + 2,
-                    color
-            );
 
             if (tooltip != null && !tooltip.isEmpty()) {
 
@@ -111,9 +110,13 @@ public class Box implements Drawable, Element, Selectable {
 
         }
 
-        int alpha = Math.min(fade * 10, 255);
-
-        int outlineColor = (alpha << 24) | (outline & 0x00FFFFFF);
+        context.fill(
+                x1 - 2,
+                y1 - 2,
+                x2 + 2,
+                y2 + 2,
+                backgroundColor
+        );
 
         // TOP
         context.fill(

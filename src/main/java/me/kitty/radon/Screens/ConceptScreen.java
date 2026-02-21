@@ -33,8 +33,10 @@ public class ConceptScreen extends Screen {
     @Override
     public void init() {
 
+        addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
+
         addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
+        addDrawableChild(new StaticBox(-2, height - 40, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         addDrawableChild(new Button(
                 width - 50 - 10,
