@@ -92,7 +92,7 @@ public class SliderRow extends Row {
                 0,
                 75,
                 16,
-                String.valueOf(initialValue),
+                String.valueOf(this.value),
                 s -> {
                     this.value = Math.round((s.getValue() * 100) / 100 * (max - min) + min);
                     s.updateText(String.valueOf(this.value));
