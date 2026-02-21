@@ -30,7 +30,7 @@ public class ConceptScreen extends Screen {
     @Override
     public void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
         addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
 
         addDrawableChild(new Button(
@@ -112,7 +112,7 @@ public class ConceptScreen extends Screen {
 
         this.addDrawableChild(new RectBox(
                 this.width / 2 - 30,
-                34,
+                36,
                 this.width / 2 + 30,
                 55,
                 false,

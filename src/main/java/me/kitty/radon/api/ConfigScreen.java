@@ -33,7 +33,7 @@ public abstract class ConfigScreen extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
         addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
 
         addDrawableChild(new Button(
@@ -170,7 +170,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         ButtonRow row = new ButtonRow(description, tooltipTexts, option, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -178,7 +178,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         SliderRow row = new SliderRow(description, tooltipTexts, initialValue, min, max, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -186,7 +186,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         InputRow row = new InputRow(description, tooltipTexts, placeholder, limit, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -195,9 +195,9 @@ public abstract class ConfigScreen extends Screen {
         heightOffset = 75 - scrollOffset;
         for (Row row : this.rows) {
             int y = heightOffset;
-            heightOffset += 20;
+            heightOffset += 25;
             if (y < 75 || y > height - 60 || !rows.contains(row)) {
-                if (!rows.contains(row)) heightOffset -= 20;
+                if (!rows.contains(row)) heightOffset -= 25;
                 row.getBox().y1 = -100;
                 row.getBox().y2 = -100;
                 row.getLabel().setY(-100);

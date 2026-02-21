@@ -144,7 +144,7 @@ public class WidgetDrawer {
 
         }
 
-        heightOffset.put(screen, heightOffset.get(screen) + 20);
+        heightOffset.put(screen, heightOffset.get(screen) + 25);
 
         renderCollections(screen, screenEntries.get(screen));
 
@@ -221,7 +221,7 @@ public class WidgetDrawer {
         screenEntries.putIfAbsent(screen, new ArrayList<>());
         screenEntries.get(screen).add(new Collection(label, slider, box));
 
-        heightOffset.put(screen, heightOffset.get(screen) + 20);
+        heightOffset.put(screen, heightOffset.get(screen) + 25);
 
         renderCollections(screen, screenEntries.get(screen));
 
@@ -255,12 +255,12 @@ public class WidgetDrawer {
 
             int y = heightOffset.get(screen);
 
-            heightOffset.put(screen, heightOffset.get(screen) + 20);
+            heightOffset.put(screen, heightOffset.get(screen) + 25);
 
             if (y < 75 || y > screen.height - 60 || !collections.contains(collection)) {
 
                 if (!collections.contains(collection)) {
-                    heightOffset.put(screen, heightOffset.get(screen) - 20);
+                    heightOffset.put(screen, heightOffset.get(screen) - 25);
                 }
 
                 /*collection.box.visible = false;

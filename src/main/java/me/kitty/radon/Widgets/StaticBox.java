@@ -47,18 +47,25 @@ public class StaticBox implements Drawable, Element, Selectable {
 
             for (int y = 0; y < h; y += 32) {
 
-                context.drawTexture(
+                int drawWidth = Math.min(32, w - x);
+                int drawHeight = Math.min(32, h - y);
+
+                context.getMatrices().pushMatrix();
+
+                context.drawGuiTexture(
                         RenderPipelines.GUI_TEXTURED,
                         BACKGROUND_TEXTURE,
+                        32,
+                        32,
+                        0,
+                        0,
                         x1 + x,
-                        y1 + y,
-                        0,
-                        0,
-                        32,
-                        32,
-                        32,
-                        32
+                        y1 + 2 + y,
+                        drawWidth,
+                        drawHeight
                 );
+
+                context.getMatrices().popMatrix();
 
             }
 

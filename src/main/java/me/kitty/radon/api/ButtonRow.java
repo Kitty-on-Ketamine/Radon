@@ -152,6 +152,9 @@ public class ButtonRow extends Row {
 
     @Override
     public Widget getWidget() {
+
         return button;
+
     }
+
 }
