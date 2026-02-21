@@ -104,7 +104,7 @@ public class SliderRow extends Row {
                 },
                 Sound.MENU_SLIDE,
                 Sound.MENU_CLICK,
-                (initialValue - min) / (double)(max - min)
+                (this.value - min) / (double)(max - min)
         );
 
         ((IScreenMixin) screen).addDrawableChildPublic(slider);
