@@ -25,10 +25,10 @@ public class Sound {
     public static void play(SoundEvent soundEvent, float volume) {
         MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.
                 //? if >1.21.10 {
-                        /*ui
-                *///? } else {
-                ambient
-                 //? }
+                        ui
+                //? } else {
+                /*ambient
+                 *///? }
                         (soundEvent, 1.0f, volume));
     }
 

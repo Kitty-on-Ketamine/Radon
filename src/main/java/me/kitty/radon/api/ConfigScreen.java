@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.kitty.radon.Radon.*;
+
 public abstract class ConfigScreen extends Screen {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private final List<String> descriptions = new ArrayList<>();
@@ -33,8 +35,10 @@ public abstract class ConfigScreen extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height - 28, width + 2, height + 2, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
+
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 28, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
+        addDrawableChild(new StaticBox(-2, height - 28, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         addDrawableChild(new Button(
                 width - 50 - 10,
@@ -174,7 +178,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         ButtonRow row = new ButtonRow(description, tooltipTexts, option, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -182,7 +186,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         SliderRow row = new SliderRow(description, tooltipTexts, initialValue, min, max, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -190,7 +194,7 @@ public abstract class ConfigScreen extends Screen {
         if (descriptions.contains(description)) return null;
         descriptions.add(description);
         InputRow row = new InputRow(description, tooltipTexts, placeholder, limit, this);
-        heightOffset += 20;
+        heightOffset += 25;
         rows.add(row);
         return row;
     }
@@ -199,9 +203,9 @@ public abstract class ConfigScreen extends Screen {
         heightOffset = 75 - scrollOffset;
         for (Row row : this.rows) {
             int y = heightOffset;
-            heightOffset += 20;
+            heightOffset += 25;
             if (y < 75 || y > height - 60 || !rows.contains(row)) {
-                if (!rows.contains(row)) heightOffset -= 20;
+                if (!rows.contains(row)) heightOffset -= 25;
                 row.getBox().y1 = -100;
                 row.getBox().y2 = -100;
                 row.getLabel().setY(-100);

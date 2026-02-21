@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static me.kitty.radon.client.Sound.MENU_CLICK;
+import static me.kitty.radon.Radon.*;
 
 public class ModMenu extends Screen {
 
@@ -70,7 +71,7 @@ public class ModMenu extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         Button backButton = new Button(
                 10,
@@ -127,10 +128,10 @@ public class ModMenu extends Screen {
                     InputStream stream = mod.getPath(iconPathOpt.get()).toUri().toURL().openStream();
                     NativeImage image = NativeImage.read(stream);
                     NativeImageBackedTexture texture = //? if <=1.21.4 {
-                            new NativeImageBackedTexture(image);
-                            //? } else {
-                            /*new NativeImageBackedTexture(iconId::toString, image);
-                            *///? }
+                            /*new NativeImageBackedTexture(image);
+                            *///? } else {
+                            new NativeImageBackedTexture(iconId::toString, image);
+                            //? }
                     mc.getTextureManager().registerTexture(iconId, texture);
                 } catch (IOException e) {
                     throw new RuntimeException(e);

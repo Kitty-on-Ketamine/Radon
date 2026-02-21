@@ -4,8 +4,8 @@ import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.8 {
-/*import net.minecraft.client.gui.Click;
-*///? }
+import net.minecraft.client.gui.Click;
+//? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.sound.SoundEvent;
@@ -78,7 +78,7 @@ public class Input extends TextFieldWidget {
     }
 
     //?if >1.21.8 {
-    /*@Override
+    @Override
     public void onClick(Click click, boolean doubled) {
 
         Sound.play(clickSound);
@@ -91,8 +91,8 @@ public class Input extends TextFieldWidget {
         Sound.play(clickSound);
 
     }
-     *///? } else {
-    @Override
+     //? } else {
+    /*@Override
     public void onClick(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
         Sound.play(clickSound);
@@ -103,7 +103,7 @@ public class Input extends TextFieldWidget {
         super.onRelease(mouseX, mouseY);
         Sound.play(clickSound);
     }
-    //? }
+    *///? }
 
     @Override
     public void write(String text) {

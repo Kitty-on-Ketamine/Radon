@@ -7,8 +7,8 @@ import me.kitty.radon.api.SliderRow;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Style;
 //? if >1.21.8 {
-/*import net.minecraft.text.StyleSpriteSource;
-*///? }
+import net.minecraft.text.StyleSpriteSource;
+//? }
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -26,10 +26,10 @@ public class Settings extends ConfigScreen {
         ButtonRow font = buttonRow("Default font", List.of("Should the mod use", "its custom font or", "use the default", "Minecraft font"), false);
         font.subscribe(f -> {
             //? if >1.21.8 {
-            /*Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) f ? "minecraft" : "radon", "default")));
-            *///? } else {
-            Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) f ? "minecraft" : "radon", "default"));
-             //? }
+            Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) f ? "minecraft" : "radon", "default")));
+            //? } else {
+            /*Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) f ? "minecraft" : "radon", "default"));
+             *///? }
             MinecraftClient.getInstance().reloadResources();
         });
         ButtonRow instantSave = buttonRow("Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
@@ -40,10 +40,10 @@ public class Settings extends ConfigScreen {
         volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
         font.onInit(() -> {
             //? if >1.21.8 {
-            /*Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default")));
-            *///? } else {
-            Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default"));
-             //? }
+            Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default")));
+            //? } else {
+            /*Radon.fontStyle = Style.EMPTY.withFont(Identifier.of((boolean) font.getValue() ? "minecraft" : "radon", "default"));
+             *///? }
         });
         instantSave.onInit(() -> Radon.instantSave = (boolean) instantSave.getValue());
     }

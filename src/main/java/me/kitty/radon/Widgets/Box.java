@@ -1,11 +1,13 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.List;
 public class Box implements Drawable, Element, Selectable {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
+
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "textures/gui/sprites/widgets/background.png");
 
     public int x1;
     public int y1;

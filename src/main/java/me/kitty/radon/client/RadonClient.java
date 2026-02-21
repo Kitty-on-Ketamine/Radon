@@ -29,10 +29,10 @@ public class RadonClient implements ClientModInitializer {
                         InputUtil.Type.KEYSYM,
                         InputUtil.GLFW_KEY_RIGHT_SHIFT,
                         //? >1.21.8 {
-                        /*KeyBinding.Category.MISC
-                        *///? } else {
-                        "MISC"
-                        //? }
+                        KeyBinding.Category.MISC
+                        //? } else {
+                        /*"MISC"
+                        *///? }
                 )
         );
 

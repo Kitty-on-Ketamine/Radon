@@ -8,8 +8,11 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
+
+import static me.kitty.radon.Radon.*;
 
 public class ConceptScreen extends Screen {
 
@@ -30,8 +33,8 @@ public class ConceptScreen extends Screen {
     @Override
     public void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of()));
-        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of()));
+        addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
+        addDrawableChild(new StaticBox(-2, height + 4, width + 2, height - 40, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         addDrawableChild(new Button(
                 width - 50 - 10,
@@ -148,15 +151,15 @@ public class ConceptScreen extends Screen {
     @Override
     public void resize(
             //? if <1.21.11 {
-            MinecraftClient client,
-            //? }
+            /*MinecraftClient client,
+            *///? }
             int width,
             int height
     ) {
         super.resize(
                 //? if <1.21.11 {
-                client,
-                //? }
+                /*client,
+                *///? }
                 width,
                 height
         );

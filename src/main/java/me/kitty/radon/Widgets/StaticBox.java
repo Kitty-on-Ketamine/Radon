@@ -10,22 +10,33 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class StaticBox implements Drawable, Element, Selectable {
-
-    private static final Identifier BACKGROUND_TEXTURE = Identifier.of("radon", "textures/gui/sprites/widgets/background.png");
 
     private final int x1;
     private final int y1;
     private final int x2;
     private final int y2;
 
+    private int lastWidth = -1;
+    private int lastHeight = -1;
+
     private final int color;
     private final int outline;
     private final List<String> tooltip;
 
-    public StaticBox(int x1, int y1, int x2, int y2, int color, int outline, List<String> tooltip) {
+    public record Icons(int frequency1, Identifier icon1, int frequency2, Identifier icon2) {}
+    private Icons icon;
+
+    private boolean initialized = false;
+
+    private HashMap<Integer, ArrayList<Identifier>> textures = new HashMap<>();
+
+    public StaticBox(int x1, int y1, int x2, int y2, int color, int outline, List<String> tooltip, Icons icons) {
 
         this.x1 = x1;
         this.y1 = y1;
@@ -34,30 +45,41 @@ public class StaticBox implements Drawable, Element, Selectable {
         this.color = color;
         this.outline = outline;
         this.tooltip = tooltip;
+        this.icon = icons;
 
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 
-        int w = x2 - x1;
-        int h = y2 - y1;
+        if (!initialized) {
+            initTextures();
+        }
 
-        for (int x = 0; x < w; x += 32) {
+        if (needsResize()) {
+            initTextures();
+        }
 
-            for (int y = 0; y < h; y += 32) {
+        int cols = Math.min(textures.get(0).size(), (x2 - x1 + 31) / 32);
+        int rows = Math.min(textures.size(), (y2 - y1 + 31) / 32);
+
+        for (int row = 0; row < rows; row++) {
+
+            ArrayList<Identifier> list = textures.get(row);
+            if (list == null) continue;
+
+            for (int col = 0; col < cols; col++) {
+
+                if (col >= list.size()) continue;
 
                 Draw.draw(
                         context,
-                        BACKGROUND_TEXTURE,
-                        x1 + x,
-                        y1 + y,
-                        0,
-                        0,
-                        32,
-                        32,
-                        32,
-                        32
+                        list.get(col),
+                        x1 + col * 32,
+                        y1 + row * 32,
+                        0, 0,
+                        32, 32,
+                        32, 32
                 );
 
             }
@@ -112,4 +134,72 @@ public class StaticBox implements Drawable, Element, Selectable {
     public SelectionType getType() {
         return SelectionType.NONE;
     }
+
+    private void initTextures() {
+
+        Random r = new Random();
+
+        int width  = x2 - x1;
+        int height = y2 - y1;
+
+        int neededCols = (width + 31) / 32;
+        int neededRows = (height + 31) / 32;
+
+        for (int row = 0; row < neededRows; row++) {
+
+            ArrayList<Identifier> list = textures.getOrDefault(row, new ArrayList<>());
+
+            if (list.isEmpty()) {
+
+                list = new ArrayList<>();
+
+                for (int col = 0; col < neededCols; col++) {
+
+                    list.add(randomIcon(row, col));
+
+                }
+
+                textures.put(row, list);
+
+            } else {
+
+                for (int col = list.size(); col < neededCols; col++) {
+
+                    list.add(randomIcon(row, col));
+
+                }
+
+            }
+
+        }
+
+        lastWidth = width;
+        lastHeight = height;
+        initialized = true;
+
+    }
+
+    private Identifier randomIcon(int row, int col) {
+
+        Random r = new Random((long) row * 10000 + col);
+        int total = icon.frequency1 + icon.frequency2;
+        return r.nextInt(total) < icon.frequency1 ? icon.icon1 : icon.icon2;
+
+    }
+
+    private boolean needsResize() {
+
+        int w = x2 - x1;
+        int h = y2 - y1;
+
+        if (w != lastWidth || h != lastHeight) {
+            lastWidth = w;
+            lastHeight = h;
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

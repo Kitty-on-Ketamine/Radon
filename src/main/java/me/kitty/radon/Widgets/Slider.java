@@ -5,8 +5,8 @@ import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.8 {
-/*import net.minecraft.client.gui.Click;
-*///? }
+import net.minecraft.client.gui.Click;
+//? }
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.sound.SoundEvent;
@@ -99,7 +99,7 @@ public class Slider extends SliderWidget {
     }
 
     //?if >1.21.8 {
-    /*@Override
+    @Override
     public void onClick(Click click, boolean doubled) {
         Sound.play(clickSound);
     }
@@ -108,8 +108,8 @@ public class Slider extends SliderWidget {
     public void onRelease(Click click) {
         Sound.play(clickSound);
     }
-     *///? } else {
-    @Override
+     //? } else {
+    /*@Override
     public void onClick(double mouseX, double mouseY) {
         Sound.play(clickSound);
     }
@@ -118,7 +118,7 @@ public class Slider extends SliderWidget {
     public void onRelease(double mouseX, double mouseY) {
         Sound.play(clickSound);
     }
-    //? }
+    *///? }
 
     public void updateText(String text) {
         this.text = Text.literal(text).setStyle(Radon.fontStyle);
