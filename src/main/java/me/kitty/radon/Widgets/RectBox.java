@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RectBox implements Drawable, Element, Selectable {
 
@@ -33,11 +34,12 @@ public class RectBox implements Drawable, Element, Selectable {
     public boolean visible;
     public boolean isStatic;
     public HashMap<RectBox, Long> now = new HashMap<>();
+    private final Consumer<RectBox> onClick;
 
     private boolean on = false;
     private int fade = 0;
 
-    public RectBox(int x1, int y1, int x2, int y2, boolean side1, boolean side2, boolean side3, boolean side4, int color, int outline, List<String> tooltip, boolean isStatic) {
+    public RectBox(int x1, int y1, int x2, int y2, boolean side1, boolean side2, boolean side3, boolean side4, int color, int outline, List<String> tooltip, boolean isStatic, Consumer<RectBox> onClick) {
 
         this.x1 = x1;
         this.y1 = y1;
@@ -61,8 +63,45 @@ public class RectBox implements Drawable, Element, Selectable {
         this.tooltip = tooltipList;
 
         this.now.put(this, System.currentTimeMillis());
+        this.onClick = onClick;
 
     }
+
+    //? >1.21.8 {
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if (!visible || hidden) return false;
+
+        if (click.x() >= x1 && click.x() <= x2 &&
+                click.y() >= y1 && click.y() <= y2) {
+
+            if (onClick != null) {
+                onClick.accept(this);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    //? } else {
+    /*@Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!visible || hidden) return false;
+
+        if (mouseX >= x1 && mouseX <= x2 &&
+            mouseY >= y1 && mouseY <= y2) {
+
+            if (onClick != null) {
+                onClick.accept(this);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    *///? }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {

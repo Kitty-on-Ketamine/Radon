@@ -125,7 +125,8 @@ public class ConceptScreen extends Screen {
                 0x880000,
                 0xffffffff,
                 List.of(),
-                true
+                true,
+                box -> {}
         ));
 
         this.addDrawableChild(new TextWidget(

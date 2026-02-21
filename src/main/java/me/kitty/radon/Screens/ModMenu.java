@@ -8,7 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.texture.NativeImage;
@@ -67,6 +67,28 @@ public class ModMenu extends Screen {
         }
     }
 
+    //? if >1.21.8 {
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        for (var child : this.children()) {
+            if (child instanceof RectBox box) {
+                if (box.mouseClicked(click, doubled)) return true;
+            }
+        }
+        return super.mouseClicked(click, doubled);
+    }
+    //? } else {
+    /*@Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        for (var child : this.children()) {
+            if (child instanceof RectBox box) {
+                if (box.mouseClicked(mouseX, mouseY, button)) return true;
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+    *///? }
 
     @Override
     protected void init() {
@@ -138,7 +160,7 @@ public class ModMenu extends Screen {
                 }
             }
 
-            this.addDrawableChild(new RectBox(
+            RectBox box = new RectBox(
                     50 + offset - 20,
                     50 - 4,
                     100 + offset,
@@ -150,8 +172,12 @@ public class ModMenu extends Screen {
                     0x88000000,
                     0xffffffff,
                     List.of(),
-                    false
-            ));
+                    false,
+                    b -> mc.execute(() -> mc.setScreen(container.getEntrypoint().setParent(this)))
+            );
+
+            this.addDrawableChild(box);
+            addSelectableChild(box);
 
             this.addDrawableChild(new TextWidget(
                     50 + offset,
