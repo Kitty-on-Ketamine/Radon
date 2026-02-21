@@ -91,13 +91,7 @@ public class RectBox implements Drawable, Element, Selectable {
 
             if (!on) {
 
-                mc.getSoundManager().play(PositionedSoundInstance.
-                        //? if >1.21.8 {
-                                ui
-                        //? } else {
-                        /*ambient
-                         *///? }
-                                (Sound.MENU_SLIDE, 1.0f, 5.0f * Radon.volume));
+                Sound.play(Sound.MENU_SLIDE);
                 on = true;
 
             }

@@ -3,7 +3,6 @@ package me.kitty.radon.api;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
-import org.jspecify.annotations.Nullable;
 
 import java.io.FileReader;
 import java.io.Reader;
@@ -18,7 +17,6 @@ class Saver {
         path = FabricLoader.getInstance().getConfigDir().resolve("radon").resolve(mod + ".json");
     }
 
-    @Nullable
     JsonObject load() {
         try {
             Files.createDirectories(path.getParent());

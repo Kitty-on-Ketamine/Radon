@@ -15,7 +15,7 @@ public class ModMenuIntegration implements ModMenuApi {
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
         Map<String, ConfigScreenFactory<?>> map = new HashMap<>(ModMenuApi.super.getProvidedConfigScreenFactories());
         for (String modId : screens.keySet()) {
-            map.put(modId, parent -> screens.get(modId).setParent(parent));
+            map.put(modId, parent -> screens.get(modId).setParent(parent).fromTop());
         }
         return map;
     }

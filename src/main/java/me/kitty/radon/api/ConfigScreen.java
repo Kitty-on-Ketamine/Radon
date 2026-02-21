@@ -124,6 +124,10 @@ public abstract class ConfigScreen extends Screen {
         this.parent = parent;
         return this;
     }
+    public ConfigScreen fromTop() {
+        scrollOffset = 0;
+        return this;
+    }
 
     public void search(String keyword) {
         if (keyword.isBlank()) {

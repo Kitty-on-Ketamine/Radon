@@ -1,7 +1,7 @@
 package me.kitty.radon.Widgets;
 
+import me.kitty.radon.client.Draw;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
@@ -47,8 +47,8 @@ public class StaticBox implements Drawable, Element, Selectable {
 
             for (int y = 0; y < h; y += 32) {
 
-                context.drawTexture(
-                        RenderPipelines.GUI_TEXTURED,
+                Draw.draw(
+                        context,
                         BACKGROUND_TEXTURE,
                         x1 + x,
                         y1 + y,

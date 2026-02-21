@@ -29,10 +29,10 @@ public class RadonClient implements ClientModInitializer {
                         InputUtil.Type.KEYSYM,
                         InputUtil.GLFW_KEY_RIGHT_SHIFT,
                         //? >1.21.8 {
-                        KeyBinding.Category.DEBUG
-                        //? } else {
-                        /*"DEBUG"
-                        *///? }
+                        /*KeyBinding.Category.MISC
+                        *///? } else {
+                        "MISC"
+                        //? }
                 )
         );
 
@@ -44,8 +44,6 @@ public class RadonClient implements ClientModInitializer {
                 MinecraftClient.getInstance().setScreen(new ModMenu());
 
             }
-
-            //System.out.println(Radon.volume);
         });
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {

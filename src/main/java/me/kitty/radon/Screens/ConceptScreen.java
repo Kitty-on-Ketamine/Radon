@@ -146,8 +146,20 @@ public class ConceptScreen extends Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
+    public void resize(
+            //? if <1.21.11 {
+            MinecraftClient client,
+            //? }
+            int width,
+            int height
+    ) {
+        super.resize(
+                //? if <1.21.11 {
+                client,
+                //? }
+                width,
+                height
+        );
         mc.execute(() -> mc.setScreen(new ConceptScreen(title, origin)));
     }
 

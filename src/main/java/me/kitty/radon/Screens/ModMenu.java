@@ -3,11 +3,11 @@ package me.kitty.radon.Screens;
 import me.kitty.radon.Radon;
 import me.kitty.radon.Widgets.*;
 import me.kitty.radon.api.ConfigScreen;
+import me.kitty.radon.client.Draw;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextWidget;
@@ -51,14 +51,14 @@ public class ModMenu extends Screen {
 
             if (iconPathOpt.isPresent()) {
                 Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
-                context.drawTexture(
-                    RenderPipelines.GUI_TEXTURED,
-                    iconId,
-                    50 + offset - 22,
-                    50 - 6,
-                    0, 0,
-                    19, 19,
-                    19, 19
+                Draw.draw(
+                        context,
+                        iconId,
+                        50 + offset - 22,
+                        50 - 6,
+                        0, 0,
+                        19, 19,
+                        19, 19
                 );
             }
 
@@ -127,10 +127,10 @@ public class ModMenu extends Screen {
                     InputStream stream = mod.getPath(iconPathOpt.get()).toUri().toURL().openStream();
                     NativeImage image = NativeImage.read(stream);
                     NativeImageBackedTexture texture = //? if <=1.21.4 {
-                            /*new NativeImageBackedTexture(image);
-                            *///? } else {
-                            new NativeImageBackedTexture(iconId::toString, image);
-                            //? }
+                            new NativeImageBackedTexture(image);
+                            //? } else {
+                            /*new NativeImageBackedTexture(iconId::toString, image);
+                            *///? }
                     mc.getTextureManager().registerTexture(iconId, texture);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -165,7 +165,7 @@ public class ModMenu extends Screen {
 
         }
 
-        String title = "Radon menu";
+        String title = "Radon Menu";
         addDrawableChild(new TextWidget(
                 (width - mc.textRenderer.getWidth(title)) / 2,
                 10,
