@@ -20,8 +20,8 @@ public class ButtonRow extends Row {
     private Button button;
     private final List<Consumer<Object>> consumers = new ArrayList<>();
 
-    ButtonRow(String description, List<String> tooltip, Object value, ConfigScreen screen) {
-        super(description, tooltip, screen);
+    ButtonRow(Tab tab, String description, List<String> tooltip, Object value, ConfigScreen screen) {
+        super(tab, description, tooltip, screen);
         this.value = value;
 
         subscribe(v -> {

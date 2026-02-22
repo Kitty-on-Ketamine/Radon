@@ -20,9 +20,9 @@ public class Input extends TextFieldWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
-    private static final Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/input");
-    private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
-    private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
+    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/input");
+    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
+    public static Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
 
     private final Consumer<Input> onType;
     private final SoundEvent clickSound;

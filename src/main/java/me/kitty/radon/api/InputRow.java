@@ -22,8 +22,8 @@ public class InputRow extends Row {
     private final List<Consumer<String>> consumers = new ArrayList<>();
     private final int limit;
 
-    InputRow(String description, List<String> tooltip, String placeholder, int limit, ConfigScreen screen) {
-        super(description, tooltip, screen);
+    InputRow(Tab tab, String description, List<String> tooltip, String placeholder, int limit, ConfigScreen screen) {
+        super(tab, description, tooltip, screen);
         this.placeholder = placeholder;
         this.limit = limit;
         subscribe(v -> {

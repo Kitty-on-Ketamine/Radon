@@ -24,9 +24,9 @@ public class Button extends ClickableWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
-    private static final Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/button");
-    private static final Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/button_highlighted");
-    private static final Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/button_disabled");
+    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/button");
+    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/button_highlighted");
+    public static Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/button_disabled");
 
     private final Consumer<Button> onPress;
     private final SoundEvent clickSound;

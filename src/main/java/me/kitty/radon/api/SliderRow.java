@@ -22,8 +22,8 @@ public class SliderRow extends Row {
     private Slider slider;
     private final List<Consumer<Long>> consumers = new ArrayList<>();
 
-    SliderRow(String description, List<String> tooltip, int initialValue, int min, int max, ConfigScreen screen) {
-        super(description, tooltip, screen);
+    SliderRow(Tab tab, String description, List<String> tooltip, int initialValue, int min, int max, ConfigScreen screen) {
+        super(tab, description, tooltip, screen);
         this.initialValue = initialValue;
         this.min = min;
         this.max = max;

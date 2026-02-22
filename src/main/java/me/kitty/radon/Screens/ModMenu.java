@@ -94,7 +94,9 @@ public class ModMenu extends Screen {
     @Override
     protected void init() {
 
-        addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
+        if (!defaultBackground) {
+            addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000, 0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
+        }
         addDrawableChild(new StaticBox(-2, -2, width + 2, 30, 0x33000000,  0xffffffff, List.of(), new StaticBox.Icons(100, static_bg, 0, static_bg)));
 
         Button backButton = new Button(
@@ -123,18 +125,6 @@ public class ModMenu extends Screen {
                 List.of(),
                 0,
                 (button) -> mc.execute(() -> mc.setScreen(Radon.settings.setParent(this))),
-                MENU_CLICK
-        );
-
-        Button conceptButton = new Button(
-                20,
-                height - 16 - 10,
-                50,
-                16,
-                "Concept",
-                List.of(),
-                0,
-                (button) -> mc.execute(() -> mc.setScreen(new ConceptScreen("SomeMod Settings", this))),
                 MENU_CLICK
         );
 
@@ -206,7 +196,6 @@ public class ModMenu extends Screen {
 
         this.addDrawableChild(backButton);
         this.addDrawableChild(settingsButton);
-        this.addDrawableChild(conceptButton);
 
     }
 }

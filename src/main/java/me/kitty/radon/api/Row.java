@@ -21,11 +21,13 @@ public abstract class Row {
     private TextWidget label;
     protected final ConfigScreen screen;
     private final List<Runnable> runnables = new ArrayList<>();
+    protected final Tab tab;
 
-    Row(String description, List<String> tooltip, ConfigScreen screen) {
+    Row(Tab tab, String description, List<String> tooltip, ConfigScreen screen) {
         this.description = description;
         this.tooltipTexts = tooltip;
         this.screen = screen;
+        this.tab = tab;
     }
 
     void reRender() {
@@ -64,6 +66,9 @@ public abstract class Row {
 
     public abstract Widget getWidget();
     public abstract void save();
+    public Tab getTab() {
+        return tab;
+    }
 
     public String getDescription() {
         return description;
@@ -72,9 +77,6 @@ public abstract class Row {
         return tooltipTexts;
     }
 
-    public void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
     public void onInit(Runnable runnable) {
         runnables.add(runnable);
     }

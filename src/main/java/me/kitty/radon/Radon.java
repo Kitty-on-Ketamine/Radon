@@ -26,6 +26,7 @@ public class Radon implements ModInitializer {
     /*public static Style fontStyle = Style.EMPTY.withFont(Identifier.of("radon", "default"));
      *///? }
     public static boolean instantSave = true;
+    public static boolean defaultBackground = false;
 
     @Override
     public void onInitialize() {

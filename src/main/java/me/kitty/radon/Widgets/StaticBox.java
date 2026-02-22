@@ -1,5 +1,6 @@
 package me.kitty.radon.Widgets;
 
+import me.kitty.radon.Radon;
 import me.kitty.radon.client.Draw;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -60,27 +61,31 @@ public class StaticBox implements Drawable, Element, Selectable {
             initTextures();
         }
 
-        int cols = Math.min(textures.get(0).size(), (x2 - x1 + 31) / 32);
-        int rows = Math.min(textures.size(), (y2 - y1 + 31) / 32);
+        if (!Radon.defaultBackground) {
 
-        for (int row = 0; row < rows; row++) {
+            int cols = Math.min(textures.get(0).size(), (x2 - x1 + 31) / 32);
+            int rows = Math.min(textures.size(), (y2 - y1 + 31) / 32);
 
-            ArrayList<Identifier> list = textures.get(row);
-            if (list == null) continue;
+            for (int row = 0; row < rows; row++) {
 
-            for (int col = 0; col < cols; col++) {
+                ArrayList<Identifier> list = textures.get(row);
+                if (list == null) continue;
 
-                if (col >= list.size()) continue;
+                for (int col = 0; col < cols; col++) {
 
-                Draw.draw(
-                        context,
-                        list.get(col),
-                        x1 + col * 32,
-                        y1 + row * 32,
-                        0, 0,
-                        32, 32,
-                        32, 32
-                );
+                    if (col >= list.size()) continue;
+
+                    Draw.draw(
+                            context,
+                            list.get(col),
+                            x1 + col * 32,
+                            y1 + row * 32,
+                            0, 0,
+                            32, 32,
+                            32, 32
+                    );
+
+                }
 
             }
 
