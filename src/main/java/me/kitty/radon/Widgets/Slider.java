@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Consumer;
 
@@ -78,7 +79,7 @@ public class Slider extends SliderWidget {
 
         Draw.drawGui(context, texture, getX(), getY(), width, height);
         int handleWidth = 9;
-        int handleX = getX() + (int)(this.value * (width - handleWidth));
+        int handleX = getX() + (int)(MathHelper.clamp(this.value, 0.0, 1.0) * (width - handleWidth));
         Draw.drawGui(context, handleTexture, handleX, getY(), handleWidth, height);
         context.drawCenteredTextWithShadow(mc.textRenderer, this.text, getX() + width / 2, getY() + (height - mc.textRenderer.fontHeight + 2) / 2, textColor);
 
@@ -136,7 +137,7 @@ public class Slider extends SliderWidget {
     }
 
     public void setValue(double value) {
-        this.value = value;
+        this.value = MathHelper.clamp(value, 0.0, 1.0);
         updateMessage();
         applyValue();
     }
