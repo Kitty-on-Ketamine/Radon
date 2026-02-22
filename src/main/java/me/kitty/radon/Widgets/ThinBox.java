@@ -33,7 +33,7 @@ public class ThinBox implements Drawable, Element, Selectable {
     private final Consumer<ThinBox> onClick;
     private boolean active = false;
 
-    public ThinBox(int x1, int y1, int x2, int y2, boolean right, boolean left, int color, int outline, int outlineActive, List<String> tooltip, Consumer<ThinBox> onClick) {
+    public ThinBox(int x1, int y1, int x2, int y2, boolean right, boolean left, int color, int outline, int outlineActive, List<String> tooltip, Consumer<ThinBox> onClick, boolean active) {
 
         this.x1 = x1;
         this.y1 = y1;
@@ -56,6 +56,7 @@ public class ThinBox implements Drawable, Element, Selectable {
 
         this.now.put(this, System.currentTimeMillis());
         this.onClick = onClick;
+        this.active = active;
 
     }
 

@@ -1,7 +1,6 @@
 package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
-import me.kitty.radon.Widgets.RectBox;
 import me.kitty.radon.Widgets.ThinBox;
 import me.kitty.radon.client.IScreenMixin;
 import me.kitty.radon.client.Sound;
@@ -21,8 +20,8 @@ public class Tab {
     private boolean active = false;
     private final Consumer<Tab> consumer;
 
-    private static boolean right = false;
-    private static boolean left = false;
+    private boolean right = false;
+    private boolean left = false;
 
     Tab(String name, Consumer<Tab> consumer, ConfigScreen screen) {
         this.name = name;
@@ -43,11 +42,11 @@ public class Tab {
                 0xffffffff,
                 List.of(),
                 box -> {
-                    active = true;
-                    box.setActive(true);
+                    setActive(true);
                     consumer.accept(this);
                     Sound.play(Sound.MENU_CLICK);
-                }
+                },
+                active
         );
 
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -74,10 +73,8 @@ public class Tab {
     }
 
     public void setActive(boolean active) {
-
         this.active = active;
-        if (tab != null) getBox().setActive(active);
-
+        if (tab != null) tab.setActive(active);
     }
 
     public boolean isActive() {
@@ -93,15 +90,11 @@ public class Tab {
     }
 
     public void setRight(boolean bool) {
-
         right = bool;
-
     }
 
     public void setLeft(boolean bool) {
-
         left = bool;
-
     }
 
 }
