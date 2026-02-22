@@ -44,6 +44,7 @@ public class Tab {
                 List.of(),
                 box -> {
                     active = true;
+                    box.setActive(true);
                     consumer.accept(this);
                     Sound.play(Sound.MENU_CLICK);
                 }
@@ -73,7 +74,10 @@ public class Tab {
     }
 
     public void setActive(boolean active) {
+
         this.active = active;
+        if (tab != null) getBox().setActive(active);
+
     }
 
     public boolean isActive() {

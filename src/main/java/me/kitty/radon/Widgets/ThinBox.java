@@ -31,6 +31,7 @@ public class ThinBox implements Drawable, Element, Selectable {
     public boolean visible;
     public HashMap<ThinBox, Long> now = new HashMap<>();
     private final Consumer<ThinBox> onClick;
+    private boolean active = false;
 
     public ThinBox(int x1, int y1, int x2, int y2, boolean right, boolean left, int color, int outline, int outlineActive, List<String> tooltip, Consumer<ThinBox> onClick) {
 
@@ -97,11 +98,15 @@ public class ThinBox implements Drawable, Element, Selectable {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 
+        boolean hovered = false;
+
         if (!this.visible) return;
 
         int outlineColor = mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2 ? outlineActive : outline;
 
         if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
+
+            hovered = true;
 
             if (tooltip != null && !tooltip.isEmpty()) {
 
@@ -116,26 +121,56 @@ public class ThinBox implements Drawable, Element, Selectable {
 
         }
 
-        context.fill(
-                x1 - 2,
-                y1 - 2,
-                x2 + 2,
-                y2 + 2,
-                color
-        );
+        if (active) outlineColor = outlineActive;
+
+        if (hovered) {
+
+            context.fill(
+                    x1 - 2,
+                    y1 - 2,
+                    x2 + 2,
+                    y2 + 5,
+                    color
+            );
+
+        } else {
+
+            context.fill(
+                    x1 - 2,
+                    y1 - 2,
+                    x2 + 2,
+                    y2 + 2,
+                    color
+            );
+
+        }
 
         // BOTTOM
-        context.fill(
-                x1 - 2,
-                y2 + 2,
-                x2 + 2,
-                y2 + 3,
-                outlineColor
-        );
+        if (hovered) {
+
+            context.fill(
+                    x1 - 2,
+                    y2 + 5,
+                    x2 + 2,
+                    y2 + 6,
+                    outlineColor
+            );
+
+        } else {
+
+            context.fill(
+                    x1 - 2,
+                    y2 + 2,
+                    x2 + 2,
+                    y2 + 3,
+                    outlineColor
+            );
+
+        }
 
         // LEFT
 
-        if (left || (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2)) {
+        if (left || active) {
 
             context.fill(
                     x1 - 2,
@@ -147,14 +182,40 @@ public class ThinBox implements Drawable, Element, Selectable {
 
         }
 
+        if (hovered) {
+
+            context.fill(
+                    x1 - 2,
+                    y1 - 2,
+                    x1 - 3,
+                    y2 + 6,
+                    outlineColor
+            );
+
+        }
+
         // RIGHT
-        context.fill(
-                x2 + 2,
-                y1 - 2,
-                x2 + 3,
-                y2 + 3,
-                outlineColor
-        );
+        if (hovered) {
+
+            context.fill(
+                    x2 + 2,
+                    y1 - 2,
+                    x2 + 3,
+                    y2 + 6,
+                    outlineColor
+            );
+
+        } else {
+
+            context.fill(
+                    x2 + 2,
+                    y1 - 2,
+                    x2 + 3,
+                    y2 + 3,
+                    outlineColor
+            );
+
+        }
 
     }
 
@@ -187,6 +248,12 @@ public class ThinBox implements Drawable, Element, Selectable {
     public void setLeft(boolean bool) {
 
         left = bool;
+
+    }
+
+    public void setActive(boolean bool) {
+
+        active = bool;
 
     }
 
