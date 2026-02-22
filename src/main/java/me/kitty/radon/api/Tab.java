@@ -2,6 +2,7 @@ package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
 import me.kitty.radon.Widgets.RectBox;
+import me.kitty.radon.Widgets.ThinBox;
 import me.kitty.radon.client.IScreenMixin;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
@@ -15,10 +16,14 @@ import java.util.function.Consumer;
 public class Tab {
     private final String name;
     private final ConfigScreen screen;
-    private RectBox tab;
+    private ThinBox tab;
     private TextWidget text;
     private boolean active = false;
     private final Consumer<Tab> consumer;
+
+    private static boolean right = false;
+    private static boolean left = false;
+
     Tab(String name, Consumer<Tab> consumer, ConfigScreen screen) {
         this.name = name;
         this.screen = screen;
@@ -26,19 +31,17 @@ public class Tab {
     }
 
     void reRender() {
-        tab = new RectBox(
+        tab = new ThinBox(
                 0,
-                35,
+                36,
                 0,
-                54,
-                false,
-                false,
-                true,
-                true,
-                0x880000,
+                50,
+                right,
+                left,
+                0x88000000,
+                0xff888888,
                 0xffffffff,
                 List.of(),
-                true,
                 box -> {
                     active = true;
                     consumer.accept(this);
@@ -50,7 +53,7 @@ public class Tab {
 
         text = new TextWidget(
                 0,
-                34 + textRenderer.fontHeight / 3 * 2,
+                33 + textRenderer.fontHeight / 3 * 2,
                 60,
                 textRenderer.fontHeight,
                 Text.literal(name).setStyle(Radon.fontStyle),
@@ -61,7 +64,7 @@ public class Tab {
         ((IScreenMixin) screen).addDrawableChildPublic(text);
     }
 
-    public RectBox getBox() {
+    public ThinBox getBox() {
         return tab;
     }
 
@@ -84,4 +87,17 @@ public class Tab {
     public ConfigScreen getScreen() {
         return screen;
     }
+
+    public void setRight(boolean bool) {
+
+        right = bool;
+
+    }
+
+    public void setLeft(boolean bool) {
+
+        left = bool;
+
+    }
+
 }

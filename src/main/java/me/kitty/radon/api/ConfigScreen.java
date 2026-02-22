@@ -36,7 +36,7 @@ public abstract class ConfigScreen extends Screen {
     private Screen parent = null;
 
     public ConfigScreen() {
-        super(Text.of(""));
+        super(Text.empty());
     }
 
     @Override
@@ -96,9 +96,9 @@ public abstract class ConfigScreen extends Screen {
 
         if (!Radon.instantSave) {
             addDrawableChild(new Button(
-                    width - 10 - 75,
+                    width - 10 - 50,
                     height - 16 - 7,
-                    75,
+                    50,
                     16,
                     "Save",
                     List.of(),
@@ -117,7 +117,11 @@ public abstract class ConfigScreen extends Screen {
         }
         for (Tab tab : tabs) {
             tab.reRender();
+            tab.getBox().setLeft(false);
         }
+
+        tabs.getFirst().getBox().setLeft(true);
+
         render(activeRows);
         renderTabs(tabs);
     }
@@ -294,7 +298,7 @@ public abstract class ConfigScreen extends Screen {
         widthOffset = 10 - wScrollOffset;
         for (Tab tab : this.tabs) {
             int x = widthOffset;
-            widthOffset += 70;
+            widthOffset += 65;
             if (x + (tab.getBox().x2 - tab.getBox().x1) < 10 || x > width - 10 || !tabs.contains(tab)) {
                 if (!tabs.contains(tab)) widthOffset -= 70;
                 tab.getBox().x1 = -100;
