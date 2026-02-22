@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class InputRow extends Row {
@@ -85,7 +86,7 @@ public class InputRow extends Row {
 
     @Override
     public void save() {
-        if (lastValue == value) return;
+        if (Objects.equals(lastValue, value)) return;
         for (Consumer<String> consumer : consumers) {
             consumer.accept(this.value);
         }

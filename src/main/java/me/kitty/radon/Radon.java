@@ -16,9 +16,9 @@ public class Radon implements ModInitializer {
     public static String inputText = "";
     public static final Settings settings = (Settings) new Settings().initSaver();
 
-    public static final Identifier bg = Identifier.of("radon", "textures/gui/sprites/widgets/background.png");
-    public static final Identifier static_bg = Identifier.of("radon", "textures/gui/sprites/widgets/static_background.png");
-    public static final Identifier coal = Identifier.of("radon", "textures/gui/sprites/widgets/coal.png");
+    public static final Identifier bg = Identifier.of("radon", "textures/gui/sprites/widget/background.png");
+    public static final Identifier static_bg = Identifier.of("radon", "textures/gui/sprites/widget/static_background.png");
+    public static final Identifier coal = Identifier.of("radon", "textures/gui/sprites/widget/coal.png");
 
     //? if > 1.21.8 {
     public static Style fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of("radon", "default")));
@@ -27,6 +27,7 @@ public class Radon implements ModInitializer {
      *///? }
     public static boolean instantSave = true;
     public static boolean defaultBackground = false;
+    public static boolean defaultTextures = false;
 
     @Override
     public void onInitialize() {

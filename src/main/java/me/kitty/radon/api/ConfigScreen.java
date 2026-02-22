@@ -56,7 +56,7 @@ public abstract class ConfigScreen extends Screen {
                 16,
                 "Radon",
                 List.of(),
-                0,
+                Radon.defaultTextures ? 0xffffffff : 0,
                 (button) -> mc.execute(() -> mc.setScreen(new ModMenu(this))),
                 Sound.MENU_CLICK
         ));
@@ -68,7 +68,7 @@ public abstract class ConfigScreen extends Screen {
                 16,
                 "Back",
                 List.of(),
-                0,
+                Radon.defaultTextures ? 0xffffffff : 0,
                 (button) -> mc.execute(() -> mc.setScreen(parent)),
                 Sound.MENU_CLICK
         ));
@@ -180,6 +180,18 @@ public abstract class ConfigScreen extends Screen {
     }
     public ConfigScreen fromTop() {
         scrollOffset = 0;
+        wScrollOffset = 0;
+        for (Tab tab : tabs) {
+            tab.setActive(false);
+        }
+        Tab first = tabs.getFirst();
+        first.setActive(true);
+        activeRows.clear();
+        for (Row row : rows) {
+            if (row.getTab() == first) {
+                activeRows.add(row);
+            }
+        }
         return this;
     }
 
@@ -218,14 +230,14 @@ public abstract class ConfigScreen extends Screen {
         if (mouseY >= 75) {
             int scrollSpeed = 10;
             scrollOffset -= (int) (verticalAmount * scrollSpeed);
-            int maxScroll = Math.max(0, rows.size() * 20 - (height - 120));
+            int maxScroll = Math.max(0, activeRows.size() * 25 - (height - 120));
             if (scrollOffset < 0) scrollOffset = 0;
             if (scrollOffset > maxScroll) scrollOffset = maxScroll;
             render(found.isEmpty() ? activeRows : found);
         } else {
             int scrollSpeed = 30;
             wScrollOffset -= (int) (verticalAmount * scrollSpeed);
-            int maxScroll = Math.max(0, tabs.size() * 70 - (width - 10));
+            int maxScroll = Math.max(0, tabs.size() * 65 - (width - 16));
             if (wScrollOffset < 0) wScrollOffset = 0;
             if (wScrollOffset > maxScroll) wScrollOffset = maxScroll;
             renderTabs(tabs);
@@ -259,6 +271,7 @@ public abstract class ConfigScreen extends Screen {
     }
     public Tab tab(String title) {
         Tab tab = new Tab(title, t -> {
+            scrollOffset = 0;
             for (Tab tabs : tabs) {
                 tabs.setActive(tabs == t);
             }
@@ -307,7 +320,11 @@ public abstract class ConfigScreen extends Screen {
             } else {
                 tab.getBox().x1 = x;
                 tab.getBox().x2 = x + 60;
-                tab.getText().setX(x + (30 - MinecraftClient.getInstance().textRenderer.getWidth(tab.getName()) / 2));
+                tab.getText().setX(x
+                        //? if >1.21.8 {
+                        + 30 - MinecraftClient.getInstance().textRenderer.getWidth(tab.getName()) / 2
+                        //? }
+                );
             }
         }
     }

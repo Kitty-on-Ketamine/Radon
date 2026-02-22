@@ -20,9 +20,8 @@ public class Input extends TextFieldWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
-    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/input");
-    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/input_highlighted");
-    public static Identifier TEXTURE_DISABLED = Identifier.of("radon", "widgets/input_disabled");
+    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widget/input");
+    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widget/input_highlighted");
 
     private final Consumer<Input> onType;
     private final SoundEvent clickSound;
@@ -57,14 +56,12 @@ public class Input extends TextFieldWidget {
 
         Identifier texture;
 
-        if (!this.active) texture = TEXTURE_DISABLED;
-        else if (this.isHovered()) {
+        if (this.isHovered()) {
 
             texture = TEXTURE_HOVER;
             this.setEditableColor(0xFFa1a1a1);
 
-        }
-        else {
+        } else {
 
             texture = TEXTURE_NORMAL;
             this.setEditableColor(0xFF656565);

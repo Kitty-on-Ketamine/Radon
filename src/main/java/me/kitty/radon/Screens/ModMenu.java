@@ -106,7 +106,7 @@ public class ModMenu extends Screen {
                 16,
                 parent != null ? "Back" : "Exit",
                 List.of(),
-                0,
+                Radon.defaultTextures ? 0xffffffff : 0,
                 (button) -> {
                     if (parent != null && parent instanceof ConfigScreen) {
                         WidgetDrawer.removeOffset(parent);
@@ -123,8 +123,8 @@ public class ModMenu extends Screen {
                 16,
                 "Settings",
                 List.of(),
-                0,
-                (button) -> mc.execute(() -> mc.setScreen(Radon.settings.setParent(this))),
+                Radon.defaultTextures ? 0xffffffff : 0,
+                (button) -> mc.execute(() -> mc.setScreen(Radon.settings.setParent(this).fromTop())),
                 MENU_CLICK
         );
 

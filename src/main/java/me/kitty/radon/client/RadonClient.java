@@ -31,7 +31,7 @@ public class RadonClient implements ClientModInitializer {
                         //? >1.21.8 {
                         KeyBinding.Category.MISC
                         //? } else {
-                        /*"MISC"
+                        /*"key.categories.misc"
                         *///? }
                 )
         );

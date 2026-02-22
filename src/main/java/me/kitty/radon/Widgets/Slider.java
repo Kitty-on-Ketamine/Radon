@@ -19,10 +19,10 @@ public class Slider extends SliderWidget {
 
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
-    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widgets/slider");
-    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widgets/slider_highlighted");
-    public static Identifier TEXTURE_HANDLE = Identifier.of("radon", "widgets/slider_handle");
-    public static Identifier TEXTURE_HANDLE_HOVER = Identifier.of("radon", "widgets/slider_handle_highlighted");
+    public static Identifier TEXTURE_NORMAL = Identifier.of("radon", "widget/slider");
+    public static Identifier TEXTURE_HOVER = Identifier.of("radon", "widget/slider_highlighted");
+    public static Identifier TEXTURE_HANDLE = Identifier.of("radon", "widget/slider_handle");
+    public static Identifier TEXTURE_HANDLE_HOVER = Identifier.of("radon", "widget/slider_handle_highlighted");
 
     private final Consumer<Slider> onPress;
     private final SoundEvent clickSound;

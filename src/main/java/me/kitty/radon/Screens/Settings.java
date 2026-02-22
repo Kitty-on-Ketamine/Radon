@@ -28,6 +28,10 @@ public class Settings extends ConfigScreen {
         Tab audioTab = tab("Audio");
         Tab textureTab = tab("Texture");
         Tab miscTab = tab("Misc");
+        for (int i = 0; i < 20; i++) {
+            tab("cica" + i);
+            buttonRow(miscTab, "cica" + i, List.of(), false);
+        }
         SliderRow volume = sliderRow(audioTab, "Volume", List.of("Slide to set the volume"), 50, 0, 100);
         volume.subscribe(vol -> Radon.volume = (float) vol / 100);
         volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
@@ -49,16 +53,18 @@ public class Settings extends ConfigScreen {
              *///? }
         });
 
-        /*ButtonRow textures = buttonRow(textureTab, "Default textures", List.of("Should the mod use", "it's custom textures or", "use the default", "Minecraft textures"), false);
+        ButtonRow textures = buttonRow(textureTab, "Default textures", List.of("Should the mod use", "it's custom textures or", "use the default", "Minecraft textures"), false);
         textures.subscribe(t -> {
             boolean value = (boolean) t;
+            Radon.defaultTextures = value;
             changeTextures(value);
             MinecraftClient.getInstance().reloadResources();
         });
         textures.onInit(() -> {
             boolean value = (boolean) textures.getValue();
+            Radon.defaultTextures = value;
             changeTextures(value);
-        });*/
+        });
 
         ButtonRow background = buttonRow(textureTab, "Default background", List.of("Should the mod use", "it's custom background", "ore use the default"), false);
         background.subscribe(b -> {
@@ -76,12 +82,14 @@ public class Settings extends ConfigScreen {
     }
 
     private void changeTextures(boolean value) {
+        String a = value ? "input" : "text_field";
+        String b = value ? "text_field" : "input";
+
         Button.TEXTURE_DISABLED = Identifier.of(value ? "minecraft" : "radon", Button.TEXTURE_DISABLED.getPath());
         Button.TEXTURE_HOVER = Identifier.of(value ? "minecraft" : "radon", Button.TEXTURE_HOVER.getPath());
         Button.TEXTURE_NORMAL = Identifier.of(value ? "minecraft" : "radon", Button.TEXTURE_NORMAL.getPath());
-        Input.TEXTURE_DISABLED = Identifier.of(value ? "minecraft" : "radon", Input.TEXTURE_DISABLED.getPath());
-        Input.TEXTURE_HOVER = Identifier.of(value ? "minecraft" : "radon", Input.TEXTURE_HOVER.getPath());
-        Input.TEXTURE_NORMAL = Identifier.of(value ? "minecraft" : "radon", Input.TEXTURE_NORMAL.getPath());
+        Input.TEXTURE_HOVER = Identifier.of(value ? "minecraft" : "radon", Input.TEXTURE_HOVER.getPath().replaceAll(a, b));
+        Input.TEXTURE_NORMAL = Identifier.of(value ? "minecraft" : "radon", Input.TEXTURE_NORMAL.getPath().replaceAll(a, b));
         Slider.TEXTURE_NORMAL = Identifier.of(value ? "minecraft" : "radon", Slider.TEXTURE_NORMAL.getPath());
         Slider.TEXTURE_HOVER = Identifier.of(value ? "minecraft" : "radon", Slider.TEXTURE_HOVER.getPath());
         Slider.TEXTURE_HANDLE = Identifier.of(value ? "minecraft" : "radon", Slider.TEXTURE_HANDLE.getPath());
