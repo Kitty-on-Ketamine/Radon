@@ -100,6 +100,7 @@ public class ModMenu extends Screen {
 
     @Override
     protected void init() {
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
 
         if (!defaultBackground) {
             addDrawableChild(new StaticBox(-2, -2, width + 2, height + 2, 0x33000000, 0xffffffff, List.of(), new StaticBox.Icons(95, bg, 5, coal)));
@@ -211,13 +212,18 @@ public class ModMenu extends Screen {
 
     }
 
+    //? if >1.21.10 {
     @Override
     public void resize(int width, int height) {
-
         CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
-
         super.resize(width, height);
-
     }
+    //? } else {
+    /*@Override
+    public void resize(MinecraftClient client, int width, int height) {
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+        super.resize(client, width, height);
+    }
+    *///? }
 
 }
