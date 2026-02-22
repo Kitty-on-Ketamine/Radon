@@ -2,6 +2,7 @@ package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
 import me.kitty.radon.Screens.ModMenu;
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.Widgets.*;
 import me.kitty.radon.client.RadonClient;
 import me.kitty.radon.client.Sound;
@@ -124,6 +125,7 @@ public abstract class ConfigScreen extends Screen {
 
         render(activeRows);
         renderTabs(tabs);
+
     }
 
     //? if >1.21.8 {

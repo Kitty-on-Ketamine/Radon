@@ -1,6 +1,7 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
@@ -63,11 +64,15 @@ public class Slider extends SliderWidget {
             handleTexture = TEXTURE_HANDLE_HOVER;
             textColor = 0xFFa1a1a1;
 
+            CursorHelper.setCursor(CursorHelper.Cursors.SLIDER);
+
         } else {
 
             texture = TEXTURE_NORMAL;
             handleTexture = TEXTURE_HANDLE;
             textColor = 0xFF606060;
+
+            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
 
         }
 

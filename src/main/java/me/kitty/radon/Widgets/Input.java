@@ -1,5 +1,6 @@
 package me.kitty.radon.Widgets;
 
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.client.Draw;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
@@ -61,10 +62,14 @@ public class Input extends TextFieldWidget {
             texture = TEXTURE_HOVER;
             this.setEditableColor(0xFFa1a1a1);
 
+            CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+
         } else {
 
             texture = TEXTURE_NORMAL;
             this.setEditableColor(0xFF656565);
+
+            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
 
         }
 

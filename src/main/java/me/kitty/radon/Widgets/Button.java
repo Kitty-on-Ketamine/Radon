@@ -1,6 +1,7 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.client.Draw;
 import net.minecraft.client.MinecraftClient;
 //? if >1.21.8 {
@@ -80,10 +81,14 @@ public class Button extends ClickableWidget {
             texture = TEXTURE_HOVER;
             textColor = 0xFFa1a1a1;
 
+            CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+
         } else {
 
             texture = TEXTURE_NORMAL;
             textColor = 0xFF606060;
+
+            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
 
         }
 

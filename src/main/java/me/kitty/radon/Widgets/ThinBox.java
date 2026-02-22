@@ -1,11 +1,13 @@
 package me.kitty.radon.Widgets;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class ThinBox implements Drawable, Element, Selectable {
     public HashMap<ThinBox, Long> now = new HashMap<>();
     private final Consumer<ThinBox> onClick;
     private boolean active = false;
+    private boolean on = false;
 
     public ThinBox(int x1, int y1, int x2, int y2, boolean right, boolean left, int color, int outline, int outlineActive, List<String> tooltip, Consumer<ThinBox> onClick, boolean active) {
 
@@ -107,6 +110,15 @@ public class ThinBox implements Drawable, Element, Selectable {
 
         if (mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2) {
 
+            CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+
+            if (!on) {
+
+                on = true;
+                Sound.play(Sound.MENU_SLIDE);
+
+            }
+
             hovered = true;
 
             if (tooltip != null && !tooltip.isEmpty()) {
@@ -119,6 +131,13 @@ public class ThinBox implements Drawable, Element, Selectable {
                 );
 
             }
+
+        }
+
+        if (on && !hovered) {
+
+            on = false;
+            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
 
         }
 
@@ -218,6 +237,11 @@ public class ThinBox implements Drawable, Element, Selectable {
 
         }
 
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return Element.super.isMouseOver(mouseX, mouseY);
     }
 
     @Override
