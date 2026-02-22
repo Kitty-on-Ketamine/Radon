@@ -28,10 +28,6 @@ public class Settings extends ConfigScreen {
         Tab audioTab = tab("Audio");
         Tab textureTab = tab("Texture");
         Tab miscTab = tab("Misc");
-        for (int i = 0; i < 20; i++) {
-            tab("cica" + i);
-            buttonRow(miscTab, "cica" + i, List.of(), false);
-        }
         SliderRow volume = sliderRow(audioTab, "Volume", List.of("Slide to set the volume"), 50, 0, 100);
         volume.subscribe(vol -> Radon.volume = (float) vol / 100);
         volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
