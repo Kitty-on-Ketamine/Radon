@@ -61,7 +61,10 @@ public class Settings extends ConfigScreen {
         });*/
 
         ButtonRow background = buttonRow(textureTab, "Default background", List.of("Should the mod use", "it's custom background", "ore use the default"), false);
-        background.subscribe(b -> Radon.defaultBackground = (boolean) b);
+        background.subscribe(b -> {
+            Radon.defaultBackground = (boolean) b;
+            MinecraftClient.getInstance().reloadResources();
+        });
         background.onInit(() -> Radon.defaultBackground = (boolean) background.getValue());
 
         ButtonRow instantSave = buttonRow(miscTab,"Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
