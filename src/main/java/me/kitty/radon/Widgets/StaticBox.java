@@ -29,6 +29,7 @@ public class StaticBox implements Drawable, Element, Selectable {
     private final int color;
     private final int outline;
     private final List<String> tooltip;
+    private static final long seed = System.nanoTime();
 
     public record Icons(int frequency1, Identifier icon1, int frequency2, Identifier icon2) {}
     private Icons icon;
@@ -204,7 +205,7 @@ public class StaticBox implements Drawable, Element, Selectable {
 
     private Identifier randomIcon(int row, int col) {
 
-        Random r = new Random((long) row * 10000 + col);
+        Random r = new Random(seed + (long) row * 10000 + col);
         int total = icon.frequency1 + icon.frequency2;
         return r.nextInt(total) < icon.frequency1 ? icon.icon1 : icon.icon2;
 
