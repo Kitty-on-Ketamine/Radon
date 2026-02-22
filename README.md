@@ -8,7 +8,7 @@
 This mod is a very easily usable configuration library.
 
 **Here's how to use it**:
-1. Add the Modrinth Maven repository to your project:
+- Add the Modrinth Maven repository to your project:
 ```groovy
 repositories {
     maven {
@@ -16,17 +16,17 @@ repositories {
     }  
 }     
 ```
-2. Add Radon to the dependencies of your mod:
+- Add Radon to the dependencies of your mod:
 ```groovy
 dependencies {
     modImplementation "maven.modrinth:radon-lib:${project.radon_version}"  
 }
 ```
-3. Define the version of Radon in gradle.properties:
+- Define the version of Radon in gradle.properties:
 ```properties
-radon_version=1.0.0-alpha.1
+radon_version=1.0.0-beta.1
 ```
-4. Create a class witch extends ConfigScreen:
+- Create a class witch extends ConfigScreen:
 ```java
 package your.mod;
 
@@ -40,6 +40,9 @@ public class MyConfig extends ConfigScreen {
     
     @Override
     protected void radon() {
+        // you need tabs to create rows
+        Tab tab = tab("tab's name");
+        Tab otherTab = tab("second tab");
         // this is where we create our options
         // if you want a boolean or an enum
         // then you want to use ButtonRow
@@ -48,6 +51,7 @@ public class MyConfig extends ConfigScreen {
             CONFIG
         }
         ButtonRow buttonRow = buttonRow(
+                tab,
                 "Label of the row",
                 List.of("Tooltip", "shows when you", "hover the row", "with your mouse"),
                 myEnum.RADON // either an option of your enum or true or false
@@ -65,6 +69,7 @@ public class MyConfig extends ConfigScreen {
         // now, comes the slider row
         // use this if you want a number
         SliderRow sliderRow = sliderRow(
+                otherTab,
                 "Label of the row",
                 List.of("Tooltip again"),
                 80, // initial value
@@ -78,6 +83,7 @@ public class MyConfig extends ConfigScreen {
         });
         // and if you need a string value, use InputRow
         InputRow inputRow = inputRow(
+                tab,
                 "Label of the row",
                 List.of("Tooltip"),
                 "Placeholder",
@@ -87,7 +93,7 @@ public class MyConfig extends ConfigScreen {
     }
 }
 ```
-5. Add your class to ``fabric.mod.json`` as an entrypoint:
+- Add your class to ``fabric.mod.json`` as an entrypoint:
 ```json
 {
   "entrypoints": {
