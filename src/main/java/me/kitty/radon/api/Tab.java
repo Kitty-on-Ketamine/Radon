@@ -3,6 +3,7 @@ package me.kitty.radon.api;
 import me.kitty.radon.Radon;
 import me.kitty.radon.Widgets.RectBox;
 import me.kitty.radon.client.IScreenMixin;
+import me.kitty.radon.client.Sound;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextWidget;
@@ -41,6 +42,7 @@ public class Tab {
                 box -> {
                     active = true;
                     consumer.accept(this);
+                    Sound.play(Sound.MENU_CLICK);
                 }
         );
 
