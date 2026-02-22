@@ -28,6 +28,7 @@ public class ModMenu extends Screen {
 
     MinecraftClient mc = MinecraftClient.getInstance();
     private final Screen parent;
+    private Runnable runnable;
 
     public ModMenu(Screen parent) {
 
@@ -46,6 +47,7 @@ public class ModMenu extends Screen {
         super.render(context, mouseX, mouseY, deltaTicks);
 
         int offset = 0;
+        int hOffset = 0;
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
             ModContainer mod = container.getProvider();
@@ -57,14 +59,18 @@ public class ModMenu extends Screen {
                         context,
                         iconId,
                         50 + offset - 22,
-                        50 - 6,
+                        50 + hOffset - 6,
                         0, 0,
                         19, 19,
                         19, 19
                 );
             }
 
-            offset += 50;
+            offset += 80;
+            if (offset >= width - 50) {
+                offset = 0;
+                hOffset += 30;
+            }
         }
     }
 
@@ -129,6 +135,7 @@ public class ModMenu extends Screen {
         );
 
         int offset = 0;
+        int hOffset = 0;
 
         for (EntrypointContainer<ConfigScreen> container : FabricLoader.getInstance().getEntrypointContainers("radon", ConfigScreen.class)) {
 
@@ -154,9 +161,9 @@ public class ModMenu extends Screen {
 
             RectBox box = new RectBox(
                     50 + offset - 20,
-                    50 - 4,
+                    50 + hOffset - 4,
                     100 + offset,
-                    50 + textRenderer.fontHeight + 2,
+                    50 + hOffset + textRenderer.fontHeight + 2,
                     false,
                     true,
                     true,
@@ -173,14 +180,18 @@ public class ModMenu extends Screen {
 
             this.addDrawableChild(new TextWidget(
                     50 + offset,
-                    50,
+                    50 + hOffset,
                     50,
                     mc.textRenderer.fontHeight,
                     Text.literal(mod.getMetadata().getName()).setStyle(Radon.fontStyle),
                     mc.textRenderer
             ));
 
-            offset += 50;
+            offset += 80;
+            if (offset >= width - 50) {
+                offset = 0;
+                hOffset += 30;
+            }
 
         }
 
