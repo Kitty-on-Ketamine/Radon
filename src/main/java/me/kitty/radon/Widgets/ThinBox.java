@@ -78,7 +78,7 @@ public class ThinBox implements Drawable, Element, Selectable {
     //? } else {
     /*@Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!visible || hidden) return false;
+        if (!visible) return false;
 
         if (mouseX >= x1 && mouseX <= x2 &&
             mouseY >= y1 && mouseY <= y2) {
