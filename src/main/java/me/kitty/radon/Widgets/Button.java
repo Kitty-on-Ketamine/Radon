@@ -35,6 +35,7 @@ public class Button extends ClickableWidget {
     private Text text;
     public Boolean hidden;
     private DrawContext drawContext;
+    private boolean on = false;
 
     public Button(int x, int y, int width, int height, String text, @UnknownNullability List<String> description, int color, Consumer<Button> onPress, SoundEvent clickSound) {
 
@@ -82,13 +83,19 @@ public class Button extends ClickableWidget {
             textColor = 0xFFa1a1a1;
 
             CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+            on = true;
 
         } else {
 
             texture = TEXTURE_NORMAL;
             textColor = 0xFF606060;
 
-            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+            if (on) {
+                
+                CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+                on = false;
+
+            }
 
         }
 

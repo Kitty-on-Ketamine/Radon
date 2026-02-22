@@ -11,14 +11,15 @@ public class CursorHelper {
 
         NORMAL,
         SLIDER,
-        POINTER
+        POINTER,
+        TEXT
 
     }
 
     public static void setCursor(Cursors newCursor) {
 
         long handle = mc.getWindow().getHandle();
-        long cursor = -1;
+        long cursor;
 
         switch (newCursor) {
 
@@ -32,6 +33,10 @@ public class CursorHelper {
 
             case Cursors.SLIDER:
                 cursor = GLFW.glfwCreateStandardCursor(GLFW.GLFW_HRESIZE_CURSOR);
+                break;
+
+            case Cursors.TEXT:
+                cursor = GLFW.glfwCreateStandardCursor(GLFW.GLFW_IBEAM_CURSOR);
                 break;
 
             default:

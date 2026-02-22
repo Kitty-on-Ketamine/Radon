@@ -31,6 +31,8 @@ public class Input extends TextFieldWidget {
     private final Text placeholder;
     private Boolean hidden;
 
+    private boolean on = false;
+
     public Input(int x, int y, int width, int limit, String placeholder, Consumer<Input> onType, SoundEvent clickSound, SoundEvent typeSound, SoundEvent backSpaceSound) {
 
         super(mc.textRenderer, x + 4, y + 4, width - 10, 16, Text.empty());
@@ -62,14 +64,21 @@ public class Input extends TextFieldWidget {
             texture = TEXTURE_HOVER;
             this.setEditableColor(0xFFa1a1a1);
 
-            CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+            if (this.getText().isEmpty()) CursorHelper.setCursor(CursorHelper.Cursors.POINTER);
+            else CursorHelper.setCursor(CursorHelper.Cursors.TEXT);
+            on = true;
 
         } else {
 
             texture = TEXTURE_NORMAL;
             this.setEditableColor(0xFF656565);
 
-            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+            if (on) {
+
+                CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+                on = false;
+
+            }
 
         }
 

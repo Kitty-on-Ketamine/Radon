@@ -330,4 +330,14 @@ public abstract class ConfigScreen extends Screen {
             }
         }
     }
+
+    @Override
+    public void resize(int width, int height) {
+
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+
+        super.resize(width, height);
+
+    }
+
 }

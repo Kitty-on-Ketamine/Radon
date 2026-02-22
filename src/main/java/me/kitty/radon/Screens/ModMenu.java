@@ -1,6 +1,7 @@
 package me.kitty.radon.Screens;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Utils.CursorHelper;
 import me.kitty.radon.Widgets.*;
 import me.kitty.radon.api.ConfigScreen;
 import me.kitty.radon.client.Draw;
@@ -209,4 +210,14 @@ public class ModMenu extends Screen {
         this.addDrawableChild(settingsButton);
 
     }
+
+    @Override
+    public void resize(int width, int height) {
+
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+
+        super.resize(width, height);
+
+    }
+
 }

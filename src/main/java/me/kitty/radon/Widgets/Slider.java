@@ -35,6 +35,8 @@ public class Slider extends SliderWidget {
     private DrawContext drawContext;
     private Boolean hidden;
 
+    private boolean on = false;
+
     public Slider(int x, int y, int width, int height, String text, Consumer<Slider> onPress, SoundEvent slideSound, SoundEvent clickSound, double initialValue) {
 
         super(x, y, width, height, Text.of(text), initialValue);
@@ -66,6 +68,7 @@ public class Slider extends SliderWidget {
             textColor = 0xFFa1a1a1;
 
             CursorHelper.setCursor(CursorHelper.Cursors.SLIDER);
+            on = true;
 
         } else {
 
@@ -73,7 +76,12 @@ public class Slider extends SliderWidget {
             handleTexture = TEXTURE_HANDLE;
             textColor = 0xFF606060;
 
-            CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+            if (on) {
+
+                CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+                on = false;
+
+            }
 
         }
 
@@ -93,7 +101,7 @@ public class Slider extends SliderWidget {
     @Override
     protected void applyValue() {
 
-        if (System.currentTimeMillis() - this.now > 45) {
+        if (System.currentTimeMillis() - this.now > 45 && this.value != 1 && this.value != 0) {
 
             Sound.play(slideSound);
             this.now = System.currentTimeMillis();
