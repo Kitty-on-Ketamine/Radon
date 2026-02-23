@@ -24,7 +24,7 @@ dependencies {
 ```
 - Define the version of Radon in gradle.properties:
 ```properties
-radon_version=1.0.0-beta.1
+radon_version=1.0.0-beta.2
 ```
 - Create a class which extends ConfigScreen:
 ```java
