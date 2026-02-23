@@ -117,7 +117,6 @@ public class ModMenu extends Screen {
                 Radon.defaultTextures ? 0xffffffff : 0,
                 (button) -> {
                     if (parent != null && parent instanceof ConfigScreen) {
-                        WidgetDrawer.removeOffset(parent);
                     }
                     mc.setScreen(parent);
                 },

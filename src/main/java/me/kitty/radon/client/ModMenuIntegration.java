@@ -4,7 +4,6 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.kitty.radon.api.ConfigScreen;
 import me.kitty.radon.Screens.ModMenu;
-import me.kitty.radon.Widgets.WidgetDrawer;
 
 import java.util.HashMap;
 import java.util.Map;
