@@ -4,10 +4,7 @@ import me.kitty.radon.Radon;
 import me.kitty.radon.Widgets.Button;
 import me.kitty.radon.Widgets.Input;
 import me.kitty.radon.Widgets.Slider;
-import me.kitty.radon.api.ButtonRow;
-import me.kitty.radon.api.ConfigScreen;
-import me.kitty.radon.api.SliderRow;
-import me.kitty.radon.api.Tab;
+import me.kitty.radon.api.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Style;
 //? if >1.21.8 {
@@ -28,11 +25,11 @@ public class Settings extends ConfigScreen {
         Tab audioTab = tab("Audio");
         Tab textureTab = tab("Texture");
         Tab miscTab = tab("Misc");
-        SliderRow volume = sliderRow(audioTab, "Volume", List.of("Slide to set the volume"), 50, 0, 100);
+        SliderRow volume = sliderRow(audioTab, key("volume"), "Volume", List.of("Slide to set the volume"), 50, 0, 100);
         volume.subscribe(vol -> Radon.volume = (float) vol / 100);
         volume.onInit(() -> Radon.volume = (float) volume.getValue() / 100);
 
-        ButtonRow font = buttonRow(textureTab, "Default font", List.of("Should the mod use", "it's custom font or", "use the default", "Minecraft font"), false);
+        ButtonRow font = buttonRow(textureTab, key("default_font"), "Default font", List.of("Should the mod use", "it's custom font or", "use the default", "Minecraft font"), false);
         font.subscribe(f -> {
             //? if >1.21.8 {
             Radon.fontStyle = Style.EMPTY.withFont(new StyleSpriteSource.Font(Identifier.of((boolean) f ? "minecraft" : "radon", "default")));
@@ -49,7 +46,7 @@ public class Settings extends ConfigScreen {
              *///? }
         });
 
-        ButtonRow textures = buttonRow(textureTab, "Default textures", List.of("Should the mod use", "it's custom textures or", "use the default", "Minecraft textures"), false);
+        ButtonRow textures = buttonRow(textureTab, key("default_textures"), "Default textures", List.of("Should the mod use", "it's custom textures or", "use the default", "Minecraft textures"), false);
         textures.subscribe(t -> {
             boolean value = (boolean) t;
             Radon.defaultTextures = value;
@@ -62,14 +59,14 @@ public class Settings extends ConfigScreen {
             changeTextures(value);
         });
 
-        ButtonRow background = buttonRow(textureTab, "Default background", List.of("Should the mod use", "it's custom background", "ore use the default"), false);
+        ButtonRow background = buttonRow(textureTab, key("default_background"), "Default background", List.of("Should the mod use", "it's custom background", "ore use the default"), false);
         background.subscribe(b -> {
             Radon.defaultBackground = (boolean) b;
             MinecraftClient.getInstance().reloadResources();
         });
         background.onInit(() -> Radon.defaultBackground = (boolean) background.getValue());
 
-        ButtonRow instantSave = buttonRow(miscTab,"Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
+        ButtonRow instantSave = buttonRow(miscTab, key("instant_save"), "Instant save", List.of("Save the option", "you edited instantly", "or only when you", "press the save button"), true);
         instantSave.subscribe(i -> {
             Radon.instantSave = (boolean) i;
             MinecraftClient.getInstance().reloadResources();

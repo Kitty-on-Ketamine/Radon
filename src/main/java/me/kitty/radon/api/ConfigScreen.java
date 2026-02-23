@@ -24,16 +24,15 @@ import static me.kitty.radon.Radon.*;
 public abstract class ConfigScreen extends Screen {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private final List<String> descriptions = new ArrayList<>();
+    private final List<Row> rows = new ArrayList<>();
+    private final List<Tab> tabs = new ArrayList<>();
+    private final List<Row> found = new ArrayList<>();
+    private final List<Row> activeRows = new ArrayList<>();
     private int heightOffset = 75;
     private int widthOffset = 10;
     private int scrollOffset = 0;
     private int wScrollOffset = 0;
-    private final List<Row> rows = new ArrayList<>();
     private Saver saver = null;
-    private final List<Tab> tabs = new ArrayList<>();
-    private final List<Row> found = new ArrayList<>();
-    private final List<Row> activeRows = new ArrayList<>();
-
     private Screen parent = null;
 
     public ConfigScreen() {
@@ -151,83 +150,6 @@ public abstract class ConfigScreen extends Screen {
     }
     *///? }
 
-
-    public abstract String getScreenTitle();
-    int getHeightOffset() {
-        return heightOffset;
-    }
-    Saver getSaver() {
-        return saver;
-    }
-    public ConfigScreen initSaver() {
-        if (saver == null) {
-            saver = new Saver(getModId());
-            radon();
-            for (Tab tab : tabs) {
-                if (tab.isActive()) {
-                    activeRows.clear();
-                    for (Row row : rows) {
-                        if (row.getTab() == tab) {
-                            activeRows.add(row);
-                        }
-                    }
-                }
-            }
-        }
-        return this;
-    }
-    protected abstract void radon();
-    public ConfigScreen setParent(Screen parent) {
-        this.parent = parent;
-        return this;
-    }
-    public ConfigScreen fromTop() {
-        scrollOffset = 0;
-        wScrollOffset = 0;
-        for (Tab tab : tabs) {
-            tab.setActive(false);
-        }
-        Tab first = tabs.getFirst();
-        first.setActive(true);
-        activeRows.clear();
-        for (Row row : rows) {
-            if (row.getTab() == first) {
-                activeRows.add(row);
-            }
-        }
-        return this;
-    }
-
-    public void search(String keyword) {
-        if (keyword.isBlank()) {
-            render(activeRows);
-            return;
-        }
-        found.clear();
-        for (Row row : activeRows) {
-            String text = row.getLabel().getMessage().getString();
-            if (text.toLowerCase().replaceAll(" ", "").contains(keyword.toLowerCase().replaceAll(" ", ""))) {
-                found.add(row);
-            }
-        }
-        render(found);
-    }
-
-    private String getModId() {
-        if (!RadonClient.modContainers.containsKey(this)) {
-            return "radon";
-        }
-        return RadonClient.modContainers.get(this).getMetadata().getId();
-    }
-
-    public Map<String, Row> getRows() {
-        Map<String, Row> map = new HashMap<>();
-        for (Row row : rows) {
-            map.put(row.getLabel().getMessage().getString(), row);
-        }
-        return map;
-    }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (mouseY >= 75) {
@@ -248,30 +170,197 @@ public abstract class ConfigScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
-    public ButtonRow buttonRow(Tab tab, String description, List<String> tooltipTexts, Object option) {
-        if (descriptions.contains(description)) return null;
+    //? if >1.21.10 {
+    @Override
+    public void resize(int width, int height) {
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+        super.resize(width, height);
+    }
+    //? } else {
+    /*@Override
+    public void resize(MinecraftClient client, int width, int height) {
+        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+        super.resize(client, width, height);
+    }
+    *///? }
+
+    /**
+     * The title of this screen rendered in-game
+     */
+    public abstract String getScreenTitle();
+    /**
+     * This runs when the screen initialized.
+     * You want to create your rows and tabs here.
+     */
+    protected abstract void radon();
+
+    int getHeightOffset() {
+        return heightOffset;
+    }
+    Saver getSaver() {
+        return saver;
+    }
+
+    private String getModId() {
+        if (!RadonClient.modContainers.containsKey(this)) {
+            return "radon";
+        }
+        return RadonClient.modContainers.get(this).getMetadata().getId();
+    }
+
+    /**
+     * <p>This method is for Radon itself. If you are using the api by the docs, you can ignore this.</p>
+     * Initializes saver and runs radon();
+     */
+    public ConfigScreen initSaver() {
+        if (saver == null) {
+            saver = new Saver(getModId());
+            radon();
+            for (Tab tab : tabs) {
+                if (tab.isActive()) {
+                    activeRows.clear();
+                    for (Row row : rows) {
+                        if (row.getTab() == tab) {
+                            activeRows.add(row);
+                        }
+                    }
+                }
+            }
+        }
+        return this;
+    }
+    /**
+     * <p>This method is for Radon itself. If you are using the api by the docs, you can ignore this.</p>
+     * Sets where the back button will put back
+     */
+    public ConfigScreen setParent(Screen parent) {
+        this.parent = parent;
+        return this;
+    }
+    /**
+     * <p>This method is for Radon itself. If you are using the api by the docs, you can ignore this.</p>
+     * Sets where the back button will put back
+     */
+    public ConfigScreen fromTop() {
+        scrollOffset = 0;
+        wScrollOffset = 0;
+        for (Tab tab : tabs) {
+            tab.setActive(false);
+        }
+        Tab first = tabs.getFirst();
+        first.setActive(true);
+        activeRows.clear();
+        for (Row row : rows) {
+            if (row.getTab() == first) {
+                activeRows.add(row);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Search between the active rows (the rows on the active tab)
+     * @param keyword The search term
+     */
+    public void search(String keyword) {
+        if (keyword.isEmpty()) {
+            render(activeRows);
+            return;
+        }
+        found.clear();
+        for (Row row : activeRows) {
+            String text = row.getLabel().getMessage().getString();
+            if (text.toLowerCase().replaceAll(" ", "").contains(keyword.toLowerCase().replaceAll(" ", ""))) {
+                found.add(row);
+            }
+        }
+        render(found);
+    }
+
+    /**
+     * @return A Map of String, Row where String is the description of the row, and Row is the row
+     */
+    public Map<String, Row> getRows() {
+        Map<String, Row> map = new HashMap<>();
+        for (Row row : rows) {
+            map.put(row.getDescription(), row);
+        }
+        return map;
+    }
+
+    /**
+     * Create a {@link ButtonRow}
+     * @param tab The tab which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param option boolean or enum option
+     * @return new {@link ButtonRow}
+     */
+    public ButtonRow buttonRow(Tab tab, Key key, String description, List<String> tooltipTexts, Boolean option) {
+        if (key == null) return null;
         descriptions.add(description);
-        ButtonRow row = new ButtonRow(tab, description, tooltipTexts, option, this);
+        ButtonRow row = new ButtonRow(tab, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
         return row;
     }
-    public SliderRow sliderRow(Tab tab, String description, List<String> tooltipTexts, int initialValue, int min, int max) {
-        if (descriptions.contains(description)) return null;
+    /**
+     * Create a {@link ButtonRow}
+     * @param tab The tab which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param option boolean or enum option
+     * @return new {@link ButtonRow}
+     */
+    public ButtonRow buttonRow(Tab tab, Key key, String description, List<String> tooltipTexts, Enum<?> option) {
+        if (key == null) return null;
         descriptions.add(description);
-        SliderRow row = new SliderRow(tab, description, tooltipTexts, initialValue, min, max, this);
+        ButtonRow row = new ButtonRow(tab, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
         return row;
     }
-    public InputRow inputRow(Tab tab, String description, List<String> tooltipTexts, String placeholder, int limit) {
-        if (descriptions.contains(description)) return null;
+    /**
+     * Create a SliderRow
+     * @param tab The tab which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param initialValue The initial value of the slider
+     * @param min The minimum value of the slider
+     * @param max The maximum value of the slider
+     * @return new {@link SliderRow}
+     */
+    public SliderRow sliderRow(Tab tab, Key key, String description, List<String> tooltipTexts, int initialValue, int min, int max) {
+        if (key == null) return null;
         descriptions.add(description);
-        InputRow row = new InputRow(tab, description, tooltipTexts, placeholder, limit, this);
+        SliderRow row = new SliderRow(tab, key, description, tooltipTexts, initialValue, min, max, this);
         heightOffset += 25;
         rows.add(row);
         return row;
     }
+    /**
+     * Create an {@link InputRow}
+     * @param tab The tab which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param placeholder When the input is empty and not focused, this will be written in it
+     * @param limit Character limit in the input
+     * @return new {@link InputRow}
+     */
+    public InputRow inputRow(Tab tab, Key key, String description, List<String> tooltipTexts, String placeholder, int limit) {
+        if (key == null) return null;
+        descriptions.add(description);
+        InputRow row = new InputRow(tab, key, description, tooltipTexts, placeholder, limit, this);
+        heightOffset += 25;
+        rows.add(row);
+        return row;
+    }
+
+    /**
+     * Create a {@link Tab}
+     * @param title The title (name) of the tab
+     * @return new {@link Tab}
+     */
     public Tab tab(String title) {
         Tab tab = new Tab(title, t -> {
             scrollOffset = 0;
@@ -289,6 +378,15 @@ public abstract class ConfigScreen extends Screen {
         tabs.add(tab);
         if (tabs.size() == 1) tab.setActive(true);
         return tab;
+    }
+
+    /**
+     * Creates a key
+     * @param key A unique string, which can be only used once
+     * @return new {@link Key} or if key already exists then null
+     */
+    public Key key(String key) {
+        return Key.of(this, key);
     }
 
     private void render(List<Row> rows) {
@@ -331,18 +429,4 @@ public abstract class ConfigScreen extends Screen {
             }
         }
     }
-
-    //? if >1.21.10 {
-    @Override
-    public void resize(int width, int height) {
-        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
-        super.resize(width, height);
-    }
-    //? } else {
-    /*@Override
-    public void resize(MinecraftClient client, int width, int height) {
-        CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
-        super.resize(client, width, height);
-    }
-    *///? }
 }

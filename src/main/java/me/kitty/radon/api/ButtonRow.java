@@ -20,22 +20,28 @@ public class ButtonRow extends Row {
     private Button button;
     private final List<Consumer<Object>> consumers = new ArrayList<>();
 
-    ButtonRow(Tab tab, String description, List<String> tooltip, Object value, ConfigScreen screen) {
-        super(tab, description, tooltip, screen);
+    ButtonRow(Tab tab, Key key, String description, List<String> tooltip, Object value, ConfigScreen screen) {
+        super(tab, key, description, tooltip, screen);
         this.value = value;
 
         subscribe(v -> {
             JsonObject config = screen.getSaver().load();
             if (config == null) return;
-            config.addProperty(description, v.toString());
+            config.addProperty(key.getKey(), v.toString());
             screen.getSaver().save(config);
             lastValue = v;
         });
         reData();
     }
+
+    /**
+     * Get the value of the button in this row
+     * @return {@link Object} which is either a boolean or an enum
+     */
     public Object getValue() {
         return value;
     }
+
     private void setValue(Object value, Boolean subscribe) {
         this.value = value;
         if (!initialized) return;
@@ -51,51 +57,41 @@ public class ButtonRow extends Row {
             }
         }
     }
-    public void setValue(Object value) {
+
+    /**
+     * Set the value of the button
+     * @param value The {@link Boolean} value of the button
+     */
+    public void setValue(boolean value) {
         setValue(value, true);
     }
+
+    /**
+     * Set the value of the button
+     * @param value The {@link Enum} value of the button
+     */
+    public void setValue(Enum<?> value) {
+        setValue(value, true);
+    }
+
+    /**
+     * Run code if the value of the button changes
+     * @param consumer A {@link Consumer} of {@link Object}
+     */
     public void subscribe(Consumer<Object> consumer) {
         consumers.add(consumer);
     }
 
+    /**
+     * If instant save is disabled for the user, this will save the value of this row
+     */
     @Override
     public void save() {
+        if (Radon.instantSave) return;
         if (lastValue == value) return;
         for (Consumer<Object> consumer : consumers) {
             consumer.accept(this.value);
         }
-    }
-
-    protected void reData() {
-        JsonObject cfg = screen.getSaver().load();
-        if (cfg != null) {
-            JsonElement val = cfg.get(description);
-            if (value instanceof Boolean) {
-                if (val == null) {
-                    cfg.addProperty(description, ((Boolean) value));
-                }
-                boolean v = cfg.get(description).getAsBoolean();
-                setValue(v, false);
-            } else if (value instanceof Enum<?> enumOption) {
-                if (val == null) {
-                    cfg.addProperty(description, "");
-                }
-                String v = cfg.get(description).getAsString();
-                if (!v.isEmpty()) {
-                    Class<Enum> enumClass = (Class<Enum>) enumOption.getClass();
-                    Enum<?> e = Enum.valueOf(enumClass, v);
-                    setValue(e, false);
-                }
-            }
-        }
-
-        init();
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        lastValue = value;
     }
 
     @Override
@@ -150,11 +146,44 @@ public class ButtonRow extends Row {
         TickUtil.runNextTick(this::reData);
     }
 
-    @Override
-    public Widget getWidget() {
+    protected void reData() {
+        JsonObject cfg = screen.getSaver().load();
+        if (cfg != null) {
+            JsonElement val = cfg.get(key.getKey());
+            if (value instanceof Boolean) {
+                if (val == null) {
+                    cfg.addProperty(key.getKey(), ((Boolean) value));
+                }
+                boolean v = cfg.get(key.getKey()).getAsBoolean();
+                setValue(v, false);
+            } else if (value instanceof Enum<?> enumOption) {
+                if (val == null) {
+                    cfg.addProperty(key.getKey(), "");
+                }
+                String v = cfg.get(key.getKey()).getAsString();
+                if (!v.isEmpty()) {
+                    Class<Enum> enumClass = (Class<Enum>) enumOption.getClass();
+                    Enum<?> e = Enum.valueOf(enumClass, v);
+                    setValue(e, false);
+                }
+            }
+        }
 
-        return button;
-
+        init();
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        lastValue = value;
+    }
+
+    /**
+     * Get the button of the row
+     * @return {@link Button}
+     */
+    @Override
+    public Widget getWidget() {
+        return button;
+    }
 }

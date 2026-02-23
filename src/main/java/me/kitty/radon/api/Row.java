@@ -22,12 +22,14 @@ public abstract class Row {
     protected final ConfigScreen screen;
     private final List<Runnable> runnables = new ArrayList<>();
     protected final Tab tab;
+    protected final Key key;
 
-    Row(Tab tab, String description, List<String> tooltip, ConfigScreen screen) {
+    Row(Tab tab, Key key, String description, List<String> tooltip, ConfigScreen screen) {
         this.description = description;
         this.tooltipTexts = tooltip;
         this.screen = screen;
         this.tab = tab;
+        this.key = key;
     }
 
     void reRender() {
@@ -56,30 +58,57 @@ public abstract class Row {
         ((IScreenMixin) screen).addDrawableChildPublic(label);
     }
 
+    /**
+     * Get the box of this row
+     * @return {@link Box}
+     */
     public Box getBox() {
         return box;
     }
 
+    /**
+     * Get the TextWidget of this row
+     * @return {@link TextWidget}
+     */
     public TextWidget getLabel() {
         return label;
     }
 
     public abstract Widget getWidget();
     public abstract void save();
+
+    /**
+     * Get the tab which includes this row
+     * @return {@link Tab}
+     */
     public Tab getTab() {
         return tab;
     }
 
+    /**
+     * Get the description of this row
+     * @return {@link String} description
+     */
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Get the tooltip texts of this row
+     * @return A {@link List} of {@link String}
+     */
     public List<String> getTooltipTexts() {
         return tooltipTexts;
     }
 
+    /**
+     * Run code when the data of the row loaded
+     * @param runnable A {@link Runnable}
+     */
     public void onInit(Runnable runnable) {
         runnables.add(runnable);
     }
+
     protected void init() {
         if (!initialized) {
             initialized = true;
