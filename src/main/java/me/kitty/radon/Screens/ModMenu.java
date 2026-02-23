@@ -112,13 +112,16 @@ public class ModMenu extends Screen {
                 5,
                 50,
                 16,
-                parent != null ? "Back" : "Exit",
+                parent != null && !(parent instanceof Settings) ? "Back" : "Exit",
                 List.of(),
                 Radon.defaultTextures ? 0xffffffff : 0,
                 (button) -> {
-                    if (parent != null && parent instanceof ConfigScreen) {
+                    if (!(parent instanceof Settings)) {
+                        mc.setScreen(parent);
+                    } else {
+                        mc.setScreen(null);
                     }
-                    mc.setScreen(parent);
+                    CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
                 },
                 MENU_CLICK
         );

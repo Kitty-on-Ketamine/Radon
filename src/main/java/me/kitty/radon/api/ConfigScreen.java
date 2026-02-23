@@ -70,7 +70,10 @@ public abstract class ConfigScreen extends Screen {
                 "Back",
                 List.of(),
                 Radon.defaultTextures ? 0xffffffff : 0,
-                (button) -> mc.execute(() -> mc.setScreen(parent)),
+                (button) -> {
+                    mc.execute(() -> mc.setScreen(parent));
+                    CursorHelper.setCursor(CursorHelper.Cursors.NORMAL);
+                },
                 Sound.MENU_CLICK
         ));
 
