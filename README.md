@@ -26,7 +26,7 @@ dependencies {
 ```properties
 radon_version=1.0.0-beta.1
 ```
-- Create a class witch extends ConfigScreen:
+- Create a class which extends ConfigScreen:
 ```java
 package your.mod;
 
@@ -52,6 +52,7 @@ public class MyConfig extends ConfigScreen {
         }
         ButtonRow buttonRow = buttonRow(
                 tab,
+                key("button_row"), // key of the row: Radon will save the content of the row to the disk with this key
                 "Label of the row",
                 List.of("Tooltip", "shows when you", "hover the row", "with your mouse"),
                 myEnum.RADON // either an option of your enum or true or false
@@ -70,6 +71,7 @@ public class MyConfig extends ConfigScreen {
         // use this if you want a number
         SliderRow sliderRow = sliderRow(
                 otherTab,
+                key("slider_key"),
                 "Label of the row",
                 List.of("Tooltip again"),
                 80, // initial value
@@ -84,6 +86,7 @@ public class MyConfig extends ConfigScreen {
         // and if you need a string value, use InputRow
         InputRow inputRow = inputRow(
                 tab,
+                key("input"),
                 "Label of the row",
                 List.of("Tooltip"),
                 "Placeholder",
