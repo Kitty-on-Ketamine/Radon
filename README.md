@@ -13,18 +13,14 @@ This mod is a very easily usable configuration library.
 repositories {
     maven {
         url = "https://api.modrinth.com/maven"
-    }  
+    }
 }     
 ```
 - Add Radon to the dependencies of your mod:
 ```groovy
 dependencies {
-    modImplementation "maven.modrinth:radon-lib:${project.radon_version}"  
+    modImplementation "maven.modrinth:radon-lib:FIND_THE_LATEST_VERSION_ON_MODRINTH"
 }
-```
-- Define the version of Radon in gradle.properties:
-```properties
-radon_version=1.0.0-beta.2
 ```
 - Create a class which extends ConfigScreen:
 ```java
@@ -37,7 +33,7 @@ public class MyConfig extends ConfigScreen {
     public String getScreenTitle() {
         return "your screen's title";
     }
-    
+
     @Override
     protected void radon() {
         // you need tabs to create rows
@@ -60,12 +56,12 @@ public class MyConfig extends ConfigScreen {
         // you sometimes want to run code, if the button's value is changed
         // it's very simple to do that:
         buttonRow.subscribe(newValue -> {
-           // newValue is an object
-           // but you can cast it into
-           (boolean) newValue
-           // or
-           (myEnum) newValue
-           // this will probably be made easier 
+            // newValue is an object
+            // but you can cast it into
+            (boolean) newValue
+                    // or
+                            (myEnum) newValue
+            // this will probably be made easier 
         });
         // now, comes the slider row
         // use this if you want a number
