@@ -34,6 +34,21 @@ public class ButtonRow extends Row {
         reData();
     }
 
+    ButtonRow(Section section, Key key, String description, List<String> tooltip, Object value, ConfigScreen screen) {
+        super(section, key, description, tooltip, screen);
+        this.value = value;
+
+        subscribe(v -> {
+            JsonObject config = screen.getSaver().load();
+            if (config == null) return;
+            config.addProperty(key.getKey(), v.toString());
+            screen.getSaver().save(config);
+            lastValue = v;
+        });
+        reData();
+
+    }
+
     /**
      * Get the value of the button in this row
      * @return {@link Object} which is either a boolean or an enum

@@ -23,6 +23,7 @@ public abstract class Row {
     private final List<Runnable> runnables = new ArrayList<>();
     protected final Tab tab;
     protected final Key key;
+    protected Section section;
 
     Row(Tab tab, Key key, String description, List<String> tooltip, ConfigScreen screen) {
         this.description = description;
@@ -30,6 +31,15 @@ public abstract class Row {
         this.screen = screen;
         this.tab = tab;
         this.key = key;
+    }
+
+    Row(Section section, Key key, String description, List<String> tooltip, ConfigScreen screen) {
+        this.description = description;
+        this.tooltipTexts = tooltip;
+        this.screen = screen;
+        this.tab = section.getTab();
+        this.key = key;
+        this.section = section;
     }
 
     void reRender() {
@@ -83,6 +93,14 @@ public abstract class Row {
      */
     public Tab getTab() {
         return tab;
+    }
+
+    /**
+     * Get the section which includes this row
+     * @return null if no section, {@link Section} if there is
+     */
+    public Section getSection() {
+        return section;
     }
 
     /**

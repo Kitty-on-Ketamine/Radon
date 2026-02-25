@@ -23,11 +23,11 @@ import static me.kitty.radon.Radon.*;
 
 public abstract class ConfigScreen extends Screen {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
-    private final List<String> descriptions = new ArrayList<>();
     private final List<Row> rows = new ArrayList<>();
     private final List<Tab> tabs = new ArrayList<>();
     private final List<Row> found = new ArrayList<>();
     private final List<Row> activeRows = new ArrayList<>();
+    private final List<Section> sections = new ArrayList<>();
     private int heightOffset = 75;
     private int widthOffset = 10;
     private int scrollOffset = 0;
@@ -119,12 +119,15 @@ public abstract class ConfigScreen extends Screen {
         for (Row row : rows) {
             row.reRender();
         }
+        for (Section section : sections) {
+            section.reRender();
+        }
         for (Tab tab : tabs) {
             tab.reRender();
             tab.getBox().setLeft(false);
         }
 
-        tabs.getFirst().getBox().setLeft(true);
+        if (!tabs.isEmpty()) tabs.getFirst().getBox().setLeft(true);
 
         render(activeRows);
         renderTabs(tabs);
@@ -301,7 +304,6 @@ public abstract class ConfigScreen extends Screen {
      */
     public ButtonRow buttonRow(Tab tab, Key key, String description, List<String> tooltipTexts, Boolean option) {
         if (key == null) return null;
-        descriptions.add(description);
         ButtonRow row = new ButtonRow(tab, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
@@ -317,7 +319,6 @@ public abstract class ConfigScreen extends Screen {
      */
     public ButtonRow buttonRow(Tab tab, Key key, String description, List<String> tooltipTexts, Enum<?> option) {
         if (key == null) return null;
-        descriptions.add(description);
         ButtonRow row = new ButtonRow(tab, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
@@ -335,7 +336,6 @@ public abstract class ConfigScreen extends Screen {
      */
     public SliderRow sliderRow(Tab tab, Key key, String description, List<String> tooltipTexts, int initialValue, int min, int max) {
         if (key == null) return null;
-        descriptions.add(description);
         SliderRow row = new SliderRow(tab, key, description, tooltipTexts, initialValue, min, max, this);
         heightOffset += 25;
         rows.add(row);
@@ -352,10 +352,77 @@ public abstract class ConfigScreen extends Screen {
      */
     public InputRow inputRow(Tab tab, Key key, String description, List<String> tooltipTexts, String placeholder, int limit) {
         if (key == null) return null;
-        descriptions.add(description);
         InputRow row = new InputRow(tab, key, description, tooltipTexts, placeholder, limit, this);
         heightOffset += 25;
         rows.add(row);
+        return row;
+    }
+
+    /**
+     * Create a {@link ButtonRow}
+     * @param section The section which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param option boolean or enum option
+     * @return new {@link ButtonRow}
+     */
+    public ButtonRow buttonRow(Section section, Key key, String description, List<String> tooltipTexts, Boolean option) {
+        if (key == null) return null;
+        ButtonRow row = new ButtonRow(section, key, description, tooltipTexts, option, this);
+        heightOffset += 25;
+        rows.add(row);
+        section.addRow(row);
+        return row;
+    }
+    /**
+     * Create a {@link ButtonRow}
+     * @param section The section which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param option boolean or enum option
+     * @return new {@link ButtonRow}
+     */
+    public ButtonRow buttonRow(Section section, Key key, String description, List<String> tooltipTexts, Enum<?> option) {
+        if (key == null) return null;
+        ButtonRow row = new ButtonRow(section, key, description, tooltipTexts, option, this);
+        heightOffset += 25;
+        rows.add(row);
+        section.addRow(row);
+        return row;
+    }
+    /**
+     * Create a SliderRow
+     * @param section The section which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param initialValue The initial value of the slider
+     * @param min The minimum value of the slider
+     * @param max The maximum value of the slider
+     * @return new {@link SliderRow}
+     */
+    public SliderRow sliderRow(Section section, Key key, String description, List<String> tooltipTexts, int initialValue, int min, int max) {
+        if (key == null) return null;
+        SliderRow row = new SliderRow(section, key, description, tooltipTexts, initialValue, min, max, this);
+        heightOffset += 25;
+        rows.add(row);
+        section.addRow(row);
+        return row;
+    }
+    /**
+     * Create an {@link InputRow}
+     * @param section The section which will include this row
+     * @param description The description of the row
+     * @param tooltipTexts Tooltip texts shown on hover; each string represents one line
+     * @param placeholder When the input is empty and not focused, this will be written in it
+     * @param limit Character limit in the input
+     * @return new {@link InputRow}
+     */
+    public InputRow inputRow(Section section, Key key, String description, List<String> tooltipTexts, String placeholder, int limit) {
+        if (key == null) return null;
+        InputRow row = new InputRow(section, key, description, tooltipTexts, placeholder, limit, this);
+        heightOffset += 25;
+        rows.add(row);
+        section.addRow(row);
         return row;
     }
 
@@ -383,6 +450,12 @@ public abstract class ConfigScreen extends Screen {
         return tab;
     }
 
+    public Section section(Tab tab, String title) {
+        Section section = new Section(tab, title, this);
+        sections.add(section);
+        return section;
+    }
+
     /**
      * Creates a key
      * @param key A unique string, which can be only used once
@@ -394,9 +467,12 @@ public abstract class ConfigScreen extends Screen {
 
     private void render(List<Row> rows) {
         heightOffset = 75 - scrollOffset;
+        Map<Section, Boolean> drawn = new HashMap<>();
+        for (Section section : sections) {
+            drawn.put(section, false);
+        }
         for (Row row : this.rows) {
             int y = heightOffset;
-            heightOffset += 25;
             if (y < 75 || y > height - 60 || !rows.contains(row)) {
                 if (!rows.contains(row)) heightOffset -= 25;
                 row.getBox().y1 = -100;
@@ -404,10 +480,32 @@ public abstract class ConfigScreen extends Screen {
                 row.getLabel().setY(-100);
                 row.getWidget().setY(-100);
             } else {
+                Section section = row.getSection();
+                if (section != null) {
+                    if (!drawn.get(section)) {
+                        drawn.put(section, true);
+                        section.getBox().y1 = heightOffset;
+                        section.getBox().y2 = heightOffset + 16;
+                        section.getText().setY(heightOffset + 1);
+                        heightOffset += 25;
+                        y = heightOffset;
+                    }
+                }
+                int x = row.getSection() != null ? 20 : 10;
+                row.getBox().x1 = x;
+                row.getLabel().setX(x);
                 row.getBox().y1 = y;
                 row.getBox().y2 = y + 16;
                 row.getLabel().setY(y + 1);
                 row.getWidget().setY((row.getWidget() instanceof Input) ? y + 4 : y);
+            }
+            heightOffset += 25;
+        }
+        for (Section section : drawn.keySet()) {
+            if (!drawn.get(section)) {
+                section.getBox().y1 = -100;
+                section.getBox().y2 = -100;
+                section.getText().setY(-100);
             }
         }
     }

@@ -19,9 +19,9 @@ import java.util.Random;
 public class StaticBox implements Drawable, Element, Selectable {
 
     private final int x1;
-    private final int y1;
+    public int y1;
     private final int x2;
-    private final int y2;
+    public int y2;
 
     private int lastWidth = -1;
     private int lastHeight = -1;
@@ -32,7 +32,7 @@ public class StaticBox implements Drawable, Element, Selectable {
     private static final long seed = System.nanoTime();
 
     public record Icons(int frequency1, Identifier icon1, int frequency2, Identifier icon2) {}
-    private Icons icon;
+    private final Icons icon;
 
     private boolean initialized = false;
 
@@ -62,7 +62,7 @@ public class StaticBox implements Drawable, Element, Selectable {
             initTextures();
         }
 
-        if (!Radon.defaultBackground) {
+        if (!Radon.defaultBackground && icon != null) {
 
             int cols = Math.min(textures.get(0).size(), (x2 - x1 + 31) / 32);
             int rows = Math.min(textures.size(), (y2 - y1 + 31) / 32);
@@ -105,11 +105,10 @@ public class StaticBox implements Drawable, Element, Selectable {
         context.fill(x1 - b + 2, y2 + 2, x2 + b + 2, y2 + b + 2, 0x55000000);
 
         // Left
-        context.fill(x1 - b + 2, y1 + 2, x1 + 2, y2 + 2, 0x55000000);
+        //context.fill(x1 - b + 2, y1 + 2, x1 + 2, y2 + 2, 0x55000000);
 
         // Right
         context.fill(x2 + 2, y1 + 2, x2 + b + 2, y2 + 2, 0x55000000);
-
 
 
         // Outline
@@ -204,6 +203,8 @@ public class StaticBox implements Drawable, Element, Selectable {
     }
 
     private Identifier randomIcon(int row, int col) {
+
+        if (icon == null) return Identifier.of("", "");
 
         Random r = new Random(seed + (long) row * 10000 + col);
         int total = icon.frequency1 + icon.frequency2;

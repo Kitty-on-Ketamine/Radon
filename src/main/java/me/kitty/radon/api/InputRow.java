@@ -38,6 +38,20 @@ public class InputRow extends Row {
         reData();
     }
 
+    InputRow(Section section, Key key, String description, List<String> tooltip, String placeholder, int limit, ConfigScreen screen) {
+        super(section, key, description, tooltip, screen);
+        this.placeholder = placeholder;
+        this.limit = limit;
+        subscribe(v -> {
+            JsonObject config = screen.getSaver().load();
+            if (config == null) return;
+            config.addProperty(key.getKey(), v);
+            screen.getSaver().save(config);
+            lastValue = v;
+        });
+        reData();
+    }
+
     /**
      * Get the placeholder of this row's input
      * @return The placeholder in {@link String}

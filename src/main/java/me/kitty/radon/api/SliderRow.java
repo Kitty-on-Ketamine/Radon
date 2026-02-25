@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.kitty.radon.Radon;
 import me.kitty.radon.Utils.TickUtil;
-import me.kitty.radon.Widgets.Input;
 import me.kitty.radon.Widgets.Slider;
 import me.kitty.radon.client.IScreenMixin;
 import me.kitty.radon.client.Sound;
@@ -25,6 +24,22 @@ public class SliderRow extends Row {
 
     SliderRow(Tab tab, Key key, String description, List<String> tooltip, int initialValue, int min, int max, ConfigScreen screen) {
         super(tab, key, description, tooltip, screen);
+        this.initialValue = initialValue;
+        this.min = min;
+        this.max = max;
+
+        subscribe(v -> {
+            JsonObject config = screen.getSaver().load();
+            if (config == null) return;
+            config.addProperty(key.getKey(), v);
+            screen.getSaver().save(config);
+            lastValue = v;
+        });
+        reData();
+    }
+
+    SliderRow(Section section, Key key, String description, List<String> tooltip, int initialValue, int min, int max, ConfigScreen screen) {
+        super(section, key, description, tooltip, screen);
         this.initialValue = initialValue;
         this.min = min;
         this.max = max;
