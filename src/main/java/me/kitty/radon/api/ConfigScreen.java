@@ -371,7 +371,6 @@ public abstract class ConfigScreen extends Screen {
         ButtonRow row = new ButtonRow(section, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
-        section.addRow(row);
         return row;
     }
     /**
@@ -387,7 +386,6 @@ public abstract class ConfigScreen extends Screen {
         ButtonRow row = new ButtonRow(section, key, description, tooltipTexts, option, this);
         heightOffset += 25;
         rows.add(row);
-        section.addRow(row);
         return row;
     }
     /**
@@ -405,7 +403,6 @@ public abstract class ConfigScreen extends Screen {
         SliderRow row = new SliderRow(section, key, description, tooltipTexts, initialValue, min, max, this);
         heightOffset += 25;
         rows.add(row);
-        section.addRow(row);
         return row;
     }
     /**
@@ -422,7 +419,6 @@ public abstract class ConfigScreen extends Screen {
         InputRow row = new InputRow(section, key, description, tooltipTexts, placeholder, limit, this);
         heightOffset += 25;
         rows.add(row);
-        section.addRow(row);
         return row;
     }
 

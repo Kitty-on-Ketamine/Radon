@@ -1,20 +1,19 @@
 package me.kitty.radon.api;
 
 import me.kitty.radon.Radon;
+import me.kitty.radon.Widgets.Box;
 import me.kitty.radon.Widgets.StaticBox;
 import me.kitty.radon.client.IScreenMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Section {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private final Tab tab;
     private String title;
-    private final List<Row> rows = new ArrayList<>();
     private final ConfigScreen screen;
     private StaticBox box;
     private TextWidget text;
@@ -25,20 +24,27 @@ public class Section {
         this.screen = screen;
     }
 
-    public Tab getTab() {
+    /**
+     * Get the Tab of this section
+     * @return {@link Tab}
+     */
+    public Tab getTab(){
         return tab;
     }
+
+    /**
+     * Get the title of this section
+     * @return {@link String}
+     */
     public String getTitle() {
         return title;
     }
+
+    /**
+     * Set the title of this section
+     */
     public void setTitle(String title) {
         this.title = title;
-    }
-    public List<Row> getRows() {
-        return rows;
-    }
-    public void addRow(Row row) {
-        rows.add(row);
     }
 
     void reRender() {
@@ -66,10 +72,18 @@ public class Section {
         ((IScreenMixin) screen).addDrawableChildPublic(text);
     }
 
+    /**
+     * Get the box of this section
+     * @return {@link Box}
+     */
     public StaticBox getBox() {
         return box;
     }
 
+    /**
+     * Get the TextWidget of this section
+     * @return {@link TextWidget}
+     */
     public TextWidget getText() {
         return text;
     }
