@@ -8,6 +8,7 @@ import me.kitty.radon.Widgets.Slider;
 import me.kitty.radon.client.IScreenMixin;
 import me.kitty.radon.client.Sound;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class SliderRow extends Row {
             config.addProperty(key.getKey(), v);
             screen.getSaver().save(config);
             lastValue = v;
+            getLabel().setMessage(Text.literal(getLabel().getMessage().getString()).setStyle(Radon.fontStyle.withItalic(false)));
         });
         reData();
     }
@@ -143,6 +145,8 @@ public class SliderRow extends Row {
                         for (Consumer<Long> consumer : consumers) {
                             consumer.accept(this.value);
                         }
+                    } else {
+                        getLabel().setMessage(Text.literal(getLabel().getMessage().getString()).setStyle(Radon.fontStyle.withItalic(this.value != lastValue)));
                     }
                 },
                 Sound.MENU_SLIDE,

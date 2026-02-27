@@ -34,6 +34,7 @@ public class InputRow extends Row {
             config.addProperty(key.getKey(), v);
             screen.getSaver().save(config);
             lastValue = v;
+            getLabel().setMessage(Text.literal(getLabel().getMessage().getString()).setStyle(Radon.fontStyle.withItalic(false)));
         });
         reData();
     }
@@ -141,6 +142,8 @@ public class InputRow extends Row {
                         for (Consumer<String> consumer : consumers) {
                             consumer.accept(this.value);
                         }
+                    } else {
+                        getLabel().setMessage(Text.literal(getLabel().getMessage().getString()).setStyle(Radon.fontStyle.withItalic(!Objects.equals(this.value, lastValue))));
                     }
                 },
                 Sound.MENU_CLICK,
