@@ -19,6 +19,7 @@ import java.util.Map;
 public class RadonClient implements ClientModInitializer {
 
     public static Map<ConfigScreen, ModContainer> modContainers = new HashMap<>();
+    public static Map<String, ConfigScreen> screens = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -51,7 +52,7 @@ public class RadonClient implements ClientModInitializer {
             ModContainer mod = container.getProvider();
             modContainers.put(screen, mod);
             screen.initSaver();
-            ModMenuIntegration.addScreen(mod.getMetadata().getId(), screen);
+            screens.put(mod.getMetadata().getId(), screen);
 
         }
 

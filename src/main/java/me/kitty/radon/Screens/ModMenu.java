@@ -19,6 +19,8 @@ import net.minecraft.util.Identifier;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,11 +148,18 @@ public class ModMenu extends Screen {
             ModContainer mod = container.getProvider();
             Optional<String> iconPathOpt = mod.getMetadata().getIconPath(19);
 
-            Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
 
             if (iconPathOpt.isPresent()) {
+                Identifier iconId = Identifier.of("radon", "icons/" + mod.getMetadata().getId());
                 try {
-                    InputStream stream = mod.getPath(iconPathOpt.get()).toUri().toURL().openStream();
+                    Path path = mod.getPath(iconPathOpt.get());
+                    InputStream stream;
+                    if (Files.exists(path)) {
+                        stream = path.toUri().toURL().openStream();
+                    } else {
+                        ModContainer radon = FabricLoader.getInstance().getModContainer("radon").get();
+                        stream = radon.getPath(radon.getMetadata().getIconPath(19).get()).toUri().toURL().openStream();
+                    }
                     NativeImage image = NativeImage.read(stream);
                     NativeImageBackedTexture texture = //? if <=1.21.4 {
                             /*new NativeImageBackedTexture(image);

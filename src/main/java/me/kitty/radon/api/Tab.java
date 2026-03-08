@@ -54,7 +54,7 @@ public class Tab {
         text = new TextWidget(
                 0,
                 33 + textRenderer.fontHeight / 3 * 2,
-                60,
+                50,
                 textRenderer.fontHeight,
                 Text.literal(name).setStyle(Radon.fontStyle),
                 textRenderer
