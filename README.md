@@ -13,13 +13,13 @@ This mod is a very easily usable configuration library.
 repositories {
     maven {
         url = "https://api.modrinth.com/maven"
-    }
+    }  
 }     
 ```
 - Add Radon to the dependencies of your mod:
 ```groovy
 dependencies {
-    modImplementation "maven.modrinth:radon-lib:FIND_THE_LATEST_VERSION_ON_MODRINTH"
+    modImplementation "maven.modrinth:radon-lib:FIND_THE_LATEST_VERSION_ON_MODRINTH"  
 }
 ```
 - Create a class which extends ConfigScreen:
@@ -33,12 +33,14 @@ public class MyConfig extends ConfigScreen {
     public String getScreenTitle() {
         return "your screen's title";
     }
-
+    
     @Override
     protected void radon() {
         // you need tabs to create rows
         Tab tab = tab("tab's name");
         Tab otherTab = tab("second tab");
+        // you can also create sections
+        Section section = section(otherTab, "name");
         // this is where we create our options
         // if you want a boolean or an enum
         // then you want to use ButtonRow
@@ -56,17 +58,17 @@ public class MyConfig extends ConfigScreen {
         // you sometimes want to run code, if the button's value is changed
         // it's very simple to do that:
         buttonRow.subscribe(newValue -> {
-            // newValue is an object
-            // but you can cast it into
-            (boolean) newValue
-                    // or
-                            (myEnum) newValue
-            // this will probably be made easier 
+           // newValue is an object
+           // but you can cast it into
+           (boolean) newValue
+           // or
+           (myEnum) newValue
+           // this will probably be made easier 
         });
         // now, comes the slider row
         // use this if you want a number
         SliderRow sliderRow = sliderRow(
-                otherTab,
+                section, // here you can use a section instead of the tab
                 key("slider_key"),
                 "Label of the row",
                 List.of("Tooltip again"),
